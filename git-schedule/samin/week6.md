@@ -1,11 +1,11 @@
-# Samin — Week 6 (4–10 May 2026)
+# Samin — Week 6
 **Branch:** `feature/vue-setup`  
 **Modules owned:** M2 Jobs · M3 Applications  
 **This week's focus:** frontend foundation (Vite, Vue 3, Pinia, Tailwind). Module CRUD starts in Week 7.
 
 ---
 
-## Day 1 — Mon 4 May
+## Step 1
 Vite + Vue 3 + Pinia scaffolding.
 
 **Files touched:**
@@ -24,7 +24,7 @@ git push -u origin feature/vue-setup
 
 ---
 
-## Day 2 — Wed 6 May
+## Step 2
 Tailwind CSS + base styles.
 
 **Files touched:**
@@ -40,7 +40,7 @@ git push origin feature/vue-setup
 
 ---
 
-## Day 3 — Fri 8 May
+## Step 3
 Axios instance ready for Areeb's auth interceptors in Week 7.
 
 **Files touched:**

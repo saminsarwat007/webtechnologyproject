@@ -1,11 +1,11 @@
-# Samin — Week 7 (11–17 May 2026)
+# Samin — Week 7
 **Branch:** `feature/jobs-api`  
 **Module owned:** **M2 — Job & Internship Management (backend, full CRUD)**  
 **Goal:** every CRUD operation on `jobs` shipped this week.
 
 ---
 
-## Day 1 — Mon 11 May
+## Step 1
 **Read** — `index()` and `show()`.
 
 **Files touched:**
@@ -23,7 +23,7 @@ git push -u origin feature/jobs-api
 
 ---
 
-## Day 2 — Wed 13 May
+## Step 2
 **Create** + **Update** — `create()` and `update()`.
 
 **Files touched:**
@@ -40,7 +40,7 @@ git push origin feature/jobs-api
 
 ---
 
-## Day 3 — Fri 15 May
+## Step 3
 **Delete** — soft-delete via `is_active = 0`.
 
 **Files touched:**
