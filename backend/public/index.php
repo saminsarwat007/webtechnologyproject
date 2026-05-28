@@ -14,8 +14,8 @@ use App\Modules\Applications\ApplicationController;
 use App\Modules\Auth\AuthController;
 use App\Modules\Companies\CompanyController;
 use App\Modules\Forums\ForumController;
-use App\Modules\Interviews\InterviewController;
 use App\Modules\Jobs\JobController;
+use App\Modules\Labels\LabelController;
 use App\Modules\Profile\ProfileController;
 use App\Support\Json;
 use App\Middleware\CorsMiddleware;
@@ -112,13 +112,17 @@ $app->get('/api/admin/users', [AdminController::class, 'users'])
 $app->get('/api/admin/analytics', [AdminController::class, 'analytics'])
     ->add(new JwtMiddleware(['admin', 'superadmin']));
 
-// ---- FORUMS (M7 — Monika) -------------------------------------------------
-// IMPORTANT: declare the static `/api/forums/comments/{id}` BEFORE the
-// dynamic `/api/forums/{id}` so Slim doesn't capture the literal segment
-// as the post id.
-$app->delete('/api/forums/comments/{id}', [ForumController::class, 'deleteComment'])
-    ->add(new JwtMiddleware()); // own (student) OR admin — enforced inside controller
+// ---- LABELS (M8 — Monika) -------------------------------------------------
+$app->get('/api/labels', [LabelController::class, 'index'])
+    ->add(new JwtMiddleware());
+$app->post('/api/labels', [LabelController::class, 'create'])
+    ->add(new JwtMiddleware());
+$app->put('/api/labels/{id}', [LabelController::class, 'update'])
+    ->add(new JwtMiddleware(['admin', 'superadmin']));
+$app->delete('/api/labels/{id}', [LabelController::class, 'delete'])
+    ->add(new JwtMiddleware(['admin', 'superadmin']));
 
+// ---- FORUMS (M7 — Monika) -------------------------------------------------
 $app->get('/api/forums', [ForumController::class, 'index'])
     ->add(new JwtMiddleware());
 $app->get('/api/forums/{id}', [ForumController::class, 'show'])
@@ -133,29 +137,8 @@ $app->post('/api/forums/{id}/like', [ForumController::class, 'toggleLike'])
     ->add(new JwtMiddleware());
 $app->post('/api/forums/{id}/comments', [ForumController::class, 'createComment'])
     ->add(new JwtMiddleware('student'));
-
-// ---- INTERVIEWS (M8 — Monika) ---------------------------------------------
-// Slot management (admin)
-$app->get('/api/interviews/slots', [InterviewController::class, 'listSlots'])
-    ->add(new JwtMiddleware());
-$app->post('/api/interviews/slots', [InterviewController::class, 'createSlot'])
-    ->add(new JwtMiddleware(['admin', 'superadmin']));
-$app->delete('/api/interviews/slots/{id}', [InterviewController::class, 'deleteSlot'])
-    ->add(new JwtMiddleware(['admin', 'superadmin']));
-
-// Student bookings
-$app->get('/api/interviews/my-sessions', [InterviewController::class, 'mySessions'])
-    ->add(new JwtMiddleware('student'));
-$app->post('/api/interviews/bookings', [InterviewController::class, 'bookSlot'])
-    ->add(new JwtMiddleware('student'));
-$app->put('/api/interviews/bookings/{id}', [InterviewController::class, 'updateBooking'])
-    ->add(new JwtMiddleware('student'));
-
-// Admin oversight + evaluation
-$app->get('/api/interviews/admin/manage', [InterviewController::class, 'adminList'])
-    ->add(new JwtMiddleware(['admin', 'superadmin']));
-$app->put('/api/interviews/admin/evaluate/{id}', [InterviewController::class, 'evaluate'])
-    ->add(new JwtMiddleware(['admin', 'superadmin']));
+$app->delete('/api/forums/{id}/comments/{comment_id}', [ForumController::class, 'deleteComment'])
+    ->add(new JwtMiddleware()); // own (student) OR admin — enforced inside controller
 
 // ---- Catch-all OPTIONS for CORS preflight ---------------------------------
 $app->options('/{routes:.+}', function (Request $request, Response $response): Response {
