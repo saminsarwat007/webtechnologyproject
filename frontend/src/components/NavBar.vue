@@ -14,6 +14,8 @@ const links = computed(() => {
       { to: '/student/jobs',         label: 'Browse Jobs' },
       { to: '/student/applications', label: 'My Applications' },
       { to: '/forum',                label: 'Forum' },
+      { to: '/interview/slots',      label: 'Interview Slots' },
+      { to: '/interview/dashboard',  label: 'My Interviews' },
       { to: '/student/profile',      label: 'Profile' }
     ]
   }
@@ -24,6 +26,8 @@ const links = computed(() => {
       { to: '/admin/applications', label: 'Applications' },
       { to: '/admin/companies',    label: 'Companies' },
       { to: '/forum',              label: 'Forum' },
+      { to: '/interview/slots',    label: 'Interview Slots' },
+      { to: '/interview/dashboard',label: 'All Sessions' },
       { to: '/admin/labels',       label: 'Labels' }
     ]
     if (auth.isSuperAdmin) {
@@ -46,11 +50,11 @@ async function handleLogout () {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
-        <RouterLink to="/" class="flex items-center gap-2 text-brand-600 font-bold text-lg">
-          <span class="inline-flex w-8 h-8 rounded-lg bg-brand-600 items-center justify-center text-white">
+        <RouterLink to="/" class="flex items-center gap-2 text-indigo-600 font-bold text-lg">
+          <span class="inline-flex w-8 h-8 rounded-lg bg-indigo-600 items-center justify-center text-white">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                  stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
-              <path d="M4 14h16M8 8l-4 4 4 4M16 8l4 4-4 4" />
+              <path d="M4 14h16M8 8l-4 4 4 4M16 8l4 4-4 4"/>
             </svg>
           </span>
           CareerBridge
@@ -59,8 +63,8 @@ async function handleLogout () {
         <!-- Desktop links -->
         <nav class="hidden md:flex items-center gap-1">
           <RouterLink v-for="l in links" :key="l.to" :to="l.to"
-            class="px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-brand-700 hover:bg-brand-50"
-            active-class="text-brand-700 bg-brand-50">
+            class="px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-indigo-700 hover:bg-indigo-50"
+            active-class="text-indigo-700 bg-indigo-50">
             {{ l.label }}
           </RouterLink>
           <span class="ml-3 text-sm text-slate-500">{{ auth.user?.full_name }}</span>
@@ -80,8 +84,8 @@ async function handleLogout () {
       <!-- Mobile menu -->
       <div v-if="open" class="md:hidden pb-3 space-y-1">
         <RouterLink v-for="l in links" :key="l.to" :to="l.to" @click="open = false"
-          class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-brand-50 hover:text-brand-700"
-          active-class="text-brand-700 bg-brand-50">
+          class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700"
+          active-class="text-indigo-700 bg-indigo-50">
           {{ l.label }}
         </RouterLink>
         <div class="border-t border-slate-200 pt-3 px-3">

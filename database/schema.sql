@@ -7,23 +7,21 @@ CREATE DATABASE IF NOT EXISTS careerbridge
   COLLATE utf8mb4_unicode_ci;
 USE careerbridge;
 
--- Drop in dependency order so re-running the script is safe.
--- `labels` is dropped here too even though we no longer create it,
--- so that databases that were seeded under the old M8 (Label & Tag) spec
--- can still be migrated cleanly to the new Mock-Interview spec.
+-- Drop in dependency order so re-running the script is safe
 DROP TABLE IF EXISTS post_likes;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS posts;
-DROP TABLE IF EXISTS labels;
-DROP TABLE IF EXISTS mock_interviews;
-DROP TABLE IF EXISTS interview_slots;
 DROP TABLE IF EXISTS applications;
 DROP TABLE IF EXISTS student_profiles;
 DROP TABLE IF EXISTS jobs;
 DROP TABLE IF EXISTS companies;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS mock_interviews;
+DROP TABLE IF EXISTS interview_slots;
+DrOP TABLE IF EXISTS labels;
 
-CREATE TABLE users (
+
+CREATE TABLE careerbridge.users (
   user_id INT AUTO_INCREMENT PRIMARY KEY,
   full_name VARCHAR(100) NOT NULL,
   email VARCHAR(150) NOT NULL UNIQUE,
@@ -32,7 +30,7 @@ CREATE TABLE users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
-CREATE TABLE companies (
+CREATE TABLE careerbridge.companies (
   company_id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(150) NOT NULL,
   industry VARCHAR(100) NOT NULL,
@@ -43,7 +41,7 @@ CREATE TABLE companies (
   FOREIGN KEY (created_by) REFERENCES users(user_id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE jobs (
+CREATE TABLE careerbridge.jobs (
   job_id INT AUTO_INCREMENT PRIMARY KEY,
   company_id INT NOT NULL,
   posted_by INT NOT NULL,
@@ -58,7 +56,7 @@ CREATE TABLE jobs (
   FOREIGN KEY (posted_by) REFERENCES users(user_id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE student_profiles (
+CREATE TABLE careerbridge.student_profiles (
   profile_id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL UNIQUE,
   matric_no VARCHAR(20) NOT NULL UNIQUE,
@@ -69,7 +67,7 @@ CREATE TABLE student_profiles (
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE applications (
+CREATE TABLE careerbridge.applications (
   application_id INT AUTO_INCREMENT PRIMARY KEY,
   job_id INT NOT NULL,
   user_id INT NOT NULL,
@@ -82,21 +80,31 @@ CREATE TABLE applications (
   UNIQUE KEY unique_application (job_id, user_id)
 ) ENGINE=InnoDB;
 
+-- labels
+CREATE TABLE labels (
+  label_id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(60) NOT NULL UNIQUE,
+  created_by INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (created_by) REFERENCES users(user_id)
+) ENGINE=InnoDB;
 -- ------------------------------------------------------------------
 -- M7 — Forum & Discussion  (Owner: Monika)
--- Posts use a free-text `tag` string (no separate labels table).
 -- ------------------------------------------------------------------
-CREATE TABLE posts (
+CREATE TABLE careerbridge.posts (
   post_id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
+  label_id INT NULL,
   title VARCHAR(150) NOT NULL,
   content TEXT NOT NULL,
-  tag VARCHAR(60) NOT NULL DEFAULT 'General',
+  likes INT NOT NULL DEFAULT 0,
+  is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(user_id)
+  FOREIGN KEY (user_id)  REFERENCES users(user_id),
+  FOREIGN KEY (label_id) REFERENCES labels(label_id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
-CREATE TABLE comments (
+CREATE TABLE careerbridge.comments (
   comment_id INT AUTO_INCREMENT PRIMARY KEY,
   post_id INT NOT NULL,
   user_id INT NOT NULL,
@@ -107,39 +115,31 @@ CREATE TABLE comments (
 ) ENGINE=InnoDB;
 
 -- Per-user post likes (supports toggle behaviour)
-CREATE TABLE post_likes (
-  like_id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE careerbridge.post_likes (
   post_id INT NOT NULL,
   user_id INT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY unique_post_user (post_id, user_id),
+  PRIMARY KEY (post_id, user_id),
   FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 ) ENGINE=InnoDB;
 
--- ------------------------------------------------------------------
--- M8 — Mock Interview & Technical Prep Scheduler  (Owner: Monika)
--- ------------------------------------------------------------------
-CREATE TABLE interview_slots (
+CREATE TABLE careerbridge.interview_slots (
   slot_id INT AUTO_INCREMENT PRIMARY KEY,
-  interviewer_id INT NOT NULL,
+  interviewer_id INT,
   scheduled_at DATETIME NOT NULL,
-  is_booked BOOLEAN NOT NULL DEFAULT FALSE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  is_booked BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (interviewer_id) REFERENCES users(user_id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE mock_interviews (
+CREATE TABLE careerbridge.mock_interviews (
   interview_id INT AUTO_INCREMENT PRIMARY KEY,
-  slot_id INT NOT NULL,
-  student_id INT NOT NULL,
+  slot_id INT,
+  student_id INT,
   job_category VARCHAR(100) NOT NULL,
-  status ENUM('pending','completed','cancelled') NOT NULL DEFAULT 'pending',
-  feedback_text TEXT NULL,
-  score INT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  status ENUM('pending', 'completed', 'cancelled') DEFAULT 'pending',
+  feedback_text TEXT,
+  score INT,
   FOREIGN KEY (slot_id) REFERENCES interview_slots(slot_id) ON DELETE CASCADE,
-  FOREIGN KEY (student_id) REFERENCES users(user_id),
-  UNIQUE KEY unique_slot_booking (slot_id)
+  FOREIGN KEY (student_id) REFERENCES users(user_id)
 ) ENGINE=InnoDB;
