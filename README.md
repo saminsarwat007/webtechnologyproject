@@ -13,7 +13,7 @@ CareerBridge is a full-stack web application that connects university students w
 | Mohammad Areeb   | A22EC4041 | M1 Auth & Access Control · M6 System Admin & Notifications |
 | Samin Sarwat     | A22EC4040 | M2 Job & Internship Management · M3 Application Tracking |
 | Mariam Hanif     | A22EC4034 | M4 Company & External Source · M5 Reporting & Analytics |
-| Monika Zelenkov  | A22EC4045 | M7 Forum & Discussion (with Labels/Tags) · M8 Mock Interview & Technical Prep |
+| Monika Zelenkova  | A22EC4045 | M7 Forum & Discussion (with Labels/Tags) · M8 Mock Interview |
 
 **Course:** SECJ3483 Web Technology  
 **Academic Session:** 2025/2026
@@ -34,8 +34,6 @@ The system is organised into eight functional modules. Each module is owned end-
 | M6 | System Administration & Notifications     | Areeb   | `Modules/Admin/AdminController::users`, global error handler                                   | `views/AdminUsers.vue`, `components/ToastNotification.vue`, `components/ConfirmDialog.vue` |
 | M7 | Forum & Discussion (with Labels/Tags)     | Monika  | `Modules/Forums/ForumController` — posts CRUD, comments, like toggle, soft/hard delete · `Modules/Labels/LabelController` — label/tag CRUD used to categorise posts (delete blocked while posts are attached) | `views/ForumDashboardView.vue`, `views/ForumDetailView.vue`, `components/forum/PostCard.vue`, `components/forum/CommentSection.vue`, `views/ManageLabels.vue`, `composables/useForum.js` |
 | M8 | Mock Interview & Technical Prep           | Monika  | `Modules/Interviews/InterviewController` — slots CRUD, student bookings, admin evaluation (**full CRUD** across `interview_slots` + `mock_interviews`) | `views/InterviewSlotsView.vue`, `views/MockInterviewDashboardView.vue`, `views/BookInterviewView.vue`, `components/interview/SlotCard.vue`, `components/interview/FeedbackModal.vue`, `composables/useInterview.js` |
-
-> **Note on Labels/Tags:** label management is *not* a standalone module. It is implemented as a tagging feature inside the Forum module — labels exist to categorise and filter forum posts, and are surfaced through the forum views and the `ManageLabels` screen.
 
 ---
 
