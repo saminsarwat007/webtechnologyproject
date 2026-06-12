@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Middleware;
@@ -23,6 +24,7 @@ final class CorsMiddleware implements MiddlewareInterface
     private array $allowedOrigins = [
         'http://localhost:5173',
         'http://127.0.0.1:5173',
+        //'https://your-frontend-domain.com',
     ];
 
     public function process(Request $request, Handler $handler): Response
