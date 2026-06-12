@@ -11,14 +11,14 @@ USE careerbridge;
 DROP TABLE IF EXISTS post_likes;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS mock_interviews;
+DROP TABLE IF EXISTS interview_slots;
 DROP TABLE IF EXISTS applications;
 DROP TABLE IF EXISTS student_profiles;
 DROP TABLE IF EXISTS jobs;
+DROP TABLE IF EXISTS labels;
 DROP TABLE IF EXISTS companies;
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS mock_interviews;
-DROP TABLE IF EXISTS interview_slots;
-DrOP TABLE IF EXISTS labels;
 
 
 CREATE TABLE careerbridge.users (

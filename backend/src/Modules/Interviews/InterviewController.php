@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Modules\Interviews;
@@ -37,7 +38,9 @@ final class InterviewController
         } catch (PDOException $e) {
             return Json::write($response, 500, [
                 'success' => false,
-                'message' => 'Server error: ' . $e->getMessage(),
+                'message' => ($_ENV['APP_DEBUG'] ?? '0') === '1'
+                    ? 'Server error: ' . $e->getMessage()
+                    : 'Server error.',
             ]);
         }
 

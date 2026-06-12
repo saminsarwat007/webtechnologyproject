@@ -10,7 +10,7 @@ import axios from 'axios'
  * import (router/index.js itself imports the auth store which uses this file).
  */
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
   headers: { 'Content-Type': 'application/json' },
   timeout: 15000
 })
