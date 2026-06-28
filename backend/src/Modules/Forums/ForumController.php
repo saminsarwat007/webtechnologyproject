@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Modules\Forums;
@@ -13,18 +14,22 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 /**
  * Module 7 — Forum & Discussion (Owner: Monika)
  *
- * Posts, comments and likes. Posts use a free-text `tag` string
- * (no separate labels table — tags are just VARCHAR(60) values).
+ * ForumController — posts, comments and likes.
  *
  * Endpoints:
- *   GET    /api/forums                    (any logged-in)   list + filter + sort
- *   GET    /api/forums/{id}               (any logged-in)   single post + comments
- *   POST   /api/forums                    (student)         create post
- *   PUT    /api/forums/{id}               (student — own)   edit own post
- *   DELETE /api/forums/{id}               (student own OR admin)   cascade delete
- *   POST   /api/forums/{id}/like          (any logged-in)   toggle like
- *   POST   /api/forums/{id}/comments      (student)         add comment
- *   DELETE /api/forums/comments/{id}      (own OR admin)    delete a comment
+ *   GET    /api/forums                               (any logged-in)
+ *   GET    /api/forums/{id}                          (any logged-in)
+ *   POST   /api/forums                               (student)
+ *   PUT    /api/forums/{id}                          (student — own only)
+ *   DELETE /api/forums/{id}                          (student own OR admin)
+ *   POST   /api/forums/{id}/like                     (any logged-in — toggle)
+ *   POST   /api/forums/{id}/comments                 (student)
+ *   DELETE /api/forums/{id}/comments/{comment_id}    (own comment OR admin)
+ *
+ * Deletion behaviour for admins:
+ *   - If a post has comments  -> soft-delete (content cleared, row kept)
+ *   - If a post has no comments -> hard-delete (row removed)
+ *   Students can only delete their own posts (always soft-delete) and their own comments.
  */
 final class ForumController
 {
@@ -34,32 +39,40 @@ final class ForumController
 
     public function index(Request $request, Response $response): Response
     {
-        $params = $request->getQueryParams();
-        $search = trim((string) ($params['search'] ?? ''));
-        $tag    = trim((string) ($params['tag'] ?? ''));
+        $params  = $request->getQueryParams();
+        $search  = trim((string) ($params['search'] ?? ''));
+        $labelId = isset($params['label_id']) ? (int) $params['label_id'] : 0;
 
-        $sql = "SELECT p.post_id, p.user_id, p.title, p.content, p.tag, p.created_at,
+        $sql = "SELECT p.post_id, p.user_id, p.label_id, p.title, p.content,
+                       p.likes, p.is_deleted, p.created_at,
                        u.full_name AS author_name,
-                       (SELECT COUNT(*) FROM comments  c WHERE c.post_id = p.post_id) AS comment_count,
-                       (SELECT COUNT(*) FROM post_likes l WHERE l.post_id = p.post_id) AS likes
+                       l.name AS label_name,
+                       (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.post_id) AS comment_count
                 FROM posts p
                 JOIN users u ON u.user_id = p.user_id
+                LEFT JOIN labels l ON l.label_id = p.label_id
                 WHERE 1=1";
         $args = [];
 
         if ($search !== '') {
+            // Native PDO prepares require each placeholder used exactly once.
             $sql .= ' AND (p.title LIKE :qt OR p.content LIKE :qc)';
             $like = '%' . $search . '%';
             $args[':qt'] = $like;
             $args[':qc'] = $like;
         }
-        if ($tag !== '') {
-            $sql .= ' AND p.tag = :tag';
-            $args[':tag'] = $tag;
+        if ($labelId > 0) {
+            $sql .= ' AND p.label_id = :lid';
+            $args[':lid'] = $labelId;
         }
 
-        // Spec: sort by likes desc (most popular first), then recency.
-        $sql .= ' ORDER BY likes DESC, p.created_at DESC';
+        // Sort: ?sort=newest (default) or ?sort=popular
+        $sort = (string) ($params['sort'] ?? 'newest');
+        if ($sort === 'popular') {
+            $sql .= ' ORDER BY p.likes DESC, p.created_at DESC';
+        } else {
+            $sql .= ' ORDER BY p.created_at DESC, p.likes DESC';
+        }
 
         try {
             $stmt = Database::getConnection()->prepare($sql);
@@ -68,19 +81,19 @@ final class ForumController
         } catch (PDOException $e) {
             return Json::write($response, 500, [
                 'success' => false,
-                'message' => 'Server error: ' . $e->getMessage(),
+                'message' => ($_ENV['APP_DEBUG'] ?? '0') === '1'
+                    ? 'Server error: ' . $e->getMessage()
+                    : 'Server error.',
             ]);
         }
 
         // Tell the caller which of these posts they've already liked.
-        $payload  = (array) $request->getAttribute('jwt_payload');
-        $userId   = (int) ($payload['user_id'] ?? 0);
+        $payload = (array) $request->getAttribute('jwt_payload');
+        $userId  = (int) ($payload['user_id'] ?? 0);
         $likedSet = $this->fetchLikedSet($userId);
 
         foreach ($rows as &$r) {
-            $r['comment_count'] = (int) $r['comment_count'];
-            $r['likes']         = (int) $r['likes'];
-            $r['liked_by_me']   = isset($likedSet[(int) $r['post_id']]);
+            $r['liked_by_me'] = isset($likedSet[(int) $r['post_id']]);
         }
 
         return Json::write($response, 200, [
@@ -103,11 +116,13 @@ final class ForumController
             $pdo = Database::getConnection();
 
             $stmt = $pdo->prepare(
-                "SELECT p.post_id, p.user_id, p.title, p.content, p.tag, p.created_at,
+                "SELECT p.post_id, p.user_id, p.label_id, p.title, p.content,
+                        p.likes, p.is_deleted, p.created_at,
                         u.full_name AS author_name,
-                        (SELECT COUNT(*) FROM post_likes l WHERE l.post_id = p.post_id) AS likes
+                        l.name AS label_name
                  FROM posts p
                  JOIN users u ON u.user_id = p.user_id
+                 LEFT JOIN labels l ON l.label_id = p.label_id
                  WHERE p.post_id = :id LIMIT 1"
             );
             $stmt->execute([':id' => $id]);
@@ -119,7 +134,6 @@ final class ForumController
                     'message' => 'Post not found.',
                 ]);
             }
-            $post['likes'] = (int) $post['likes'];
 
             $stmt = $pdo->prepare(
                 "SELECT c.comment_id, c.post_id, c.user_id, c.content, c.created_at,
@@ -138,8 +152,8 @@ final class ForumController
             ]);
         }
 
-        $payload  = (array) $request->getAttribute('jwt_payload');
-        $userId   = (int) ($payload['user_id'] ?? 0);
+        $payload = (array) $request->getAttribute('jwt_payload');
+        $userId  = (int) ($payload['user_id'] ?? 0);
         $likedSet = $this->fetchLikedSet($userId, [$id]);
         $post['liked_by_me'] = isset($likedSet[$id]);
 
@@ -158,14 +172,21 @@ final class ForumController
         $userId  = (int) ($payload['user_id'] ?? 0);
         $body    = $this->readJson($request);
 
-        $title   = trim((string) ($body['title']   ?? ''));
-        $content = trim((string) ($body['content'] ?? ''));
-        $tag     = trim((string) ($body['tag']     ?? ''));
-        if ($tag === '') {
-            $tag = 'General';
-        }
+        $title    = trim((string) ($body['title'] ?? ''));
+        $content  = trim((string) ($body['content'] ?? ''));
+        $labelId  = isset($body['label_id']) && $body['label_id'] !== ''
+            ? (int) $body['label_id']
+            : null;
 
-        $errors = $this->validatePostFields($title, $content, $tag);
+        $errors = [];
+        if ($title === '' || mb_strlen($title) > 150) {
+            $errors['title'] = 'Title is required (max 150 chars).';
+        }
+        if ($content === '') {
+            $errors['content'] = 'Content is required.';
+        } elseif (mb_strlen($content) > 5000) {
+            $errors['content'] = 'Content must be 5000 characters or fewer.';
+        }
         if (!empty($errors)) {
             return Json::write($response, 400, [
                 'success' => false,
@@ -176,17 +197,31 @@ final class ForumController
 
         try {
             $pdo = Database::getConnection();
+
+            if ($labelId !== null) {
+                $stmt = $pdo->prepare('SELECT label_id FROM labels WHERE label_id = :id LIMIT 1');
+                $stmt->execute([':id' => $labelId]);
+                if (!$stmt->fetch()) {
+                    return Json::write($response, 400, [
+                        'success' => false,
+                        'message' => 'Validation failed.',
+                        'errors'  => ['label_id' => 'Selected label does not exist.'],
+                    ]);
+                }
+            }
+
             $stmt = $pdo->prepare(
-                'INSERT INTO posts (user_id, title, content, tag)
-                 VALUES (:uid, :t, :c, :tag)'
+                'INSERT INTO posts (user_id, label_id, title, content)
+                 VALUES (:uid, :lid, :t, :c)'
             );
             $stmt->execute([
                 ':uid' => $userId,
+                ':lid' => $labelId,
                 ':t'   => $title,
                 ':c'   => $content,
-                ':tag' => $tag,
             ]);
-            $id  = (int) $pdo->lastInsertId();
+            $id = (int) $pdo->lastInsertId();
+
             $row = $this->fetchPostRow($pdo, $id);
         } catch (PDOException $e) {
             return Json::write($response, 500, [
@@ -216,14 +251,21 @@ final class ForumController
             ]);
         }
 
-        $title   = trim((string) ($body['title']   ?? ''));
+        $title   = trim((string) ($body['title'] ?? ''));
         $content = trim((string) ($body['content'] ?? ''));
-        $tag     = trim((string) ($body['tag']     ?? ''));
-        if ($tag === '') {
-            $tag = 'General';
-        }
+        $labelId = isset($body['label_id']) && $body['label_id'] !== ''
+            ? (int) $body['label_id']
+            : null;
 
-        $errors = $this->validatePostFields($title, $content, $tag);
+        $errors = [];
+        if ($title === '' || mb_strlen($title) > 150) {
+            $errors['title'] = 'Title is required (max 150 chars).';
+        }
+        if ($content === '') {
+            $errors['content'] = 'Content is required.';
+        } elseif (mb_strlen($content) > 5000) {
+            $errors['content'] = 'Content must be 5000 characters or fewer.';
+        }
         if (!empty($errors)) {
             return Json::write($response, 400, [
                 'success' => false,
@@ -235,7 +277,9 @@ final class ForumController
         try {
             $pdo = Database::getConnection();
 
-            $stmt = $pdo->prepare('SELECT user_id FROM posts WHERE post_id = :id LIMIT 1');
+            $stmt = $pdo->prepare(
+                'SELECT user_id, is_deleted FROM posts WHERE post_id = :id LIMIT 1'
+            );
             $stmt->execute([':id' => $id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -245,6 +289,12 @@ final class ForumController
                     'message' => 'Post not found.',
                 ]);
             }
+            if ((int) $row['is_deleted'] === 1) {
+                return Json::write($response, 400, [
+                    'success' => false,
+                    'message' => 'Cannot edit a deleted post.',
+                ]);
+            }
             if ((int) $row['user_id'] !== $userId) {
                 return Json::write($response, 403, [
                     'success' => false,
@@ -252,15 +302,27 @@ final class ForumController
                 ]);
             }
 
+            if ($labelId !== null) {
+                $stmt = $pdo->prepare('SELECT label_id FROM labels WHERE label_id = :id LIMIT 1');
+                $stmt->execute([':id' => $labelId]);
+                if (!$stmt->fetch()) {
+                    return Json::write($response, 400, [
+                        'success' => false,
+                        'message' => 'Validation failed.',
+                        'errors'  => ['label_id' => 'Selected label does not exist.'],
+                    ]);
+                }
+            }
+
             $stmt = $pdo->prepare(
                 'UPDATE posts
-                 SET title = :t, content = :c, tag = :tag
+                 SET title = :t, content = :c, label_id = :lid
                  WHERE post_id = :id'
             );
             $stmt->execute([
                 ':t'   => $title,
                 ':c'   => $content,
-                ':tag' => $tag,
+                ':lid' => $labelId,
                 ':id'  => $id,
             ]);
 
@@ -285,7 +347,6 @@ final class ForumController
         $payload = (array) $request->getAttribute('jwt_payload');
         $userId  = (int) ($payload['user_id'] ?? 0);
         $role    = (string) ($payload['role'] ?? '');
-        $isAdmin = in_array($role, ['admin', 'superadmin'], true);
 
         if ($id <= 0) {
             return Json::write($response, 400, [
@@ -294,10 +355,14 @@ final class ForumController
             ]);
         }
 
+        $isAdmin = in_array($role, ['admin', 'superadmin'], true);
+
         try {
             $pdo = Database::getConnection();
 
-            $stmt = $pdo->prepare('SELECT user_id FROM posts WHERE post_id = :id LIMIT 1');
+            $stmt = $pdo->prepare(
+                'SELECT user_id, is_deleted FROM posts WHERE post_id = :id LIMIT 1'
+            );
             $stmt->execute([':id' => $id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if (!$row) {
@@ -306,6 +371,7 @@ final class ForumController
                     'message' => 'Post not found.',
                 ]);
             }
+
             if (!$isAdmin && (int) $row['user_id'] !== $userId) {
                 return Json::write($response, 403, [
                     'success' => false,
@@ -313,21 +379,45 @@ final class ForumController
                 ]);
             }
 
-            // FK constraints with ON DELETE CASCADE on comments + post_likes
-            // remove dependent rows automatically.
-            $pdo->prepare('DELETE FROM posts WHERE post_id = :id')->execute([':id' => $id]);
+            // Count comments to decide soft vs hard delete.
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM comments WHERE post_id = :id');
+            $stmt->execute([':id' => $id]);
+            $commentCount = (int) $stmt->fetchColumn();
+
+            if ($commentCount > 0) {
+                // Soft delete: keep row + comments, blank out content.
+                $stmt = $pdo->prepare(
+                    "UPDATE posts
+                     SET is_deleted = 1,
+                         title = '[deleted]',
+                         content = '[This post was deleted.]'
+                     WHERE post_id = :id"
+                );
+                $stmt->execute([':id' => $id]);
+
+                return Json::write($response, 200, [
+                    'success' => true,
+                    'message' => 'Post soft-deleted (comments retained).',
+                    'data'    => ['mode' => 'soft', 'post_id' => $id],
+                ]);
+            }
+
+            // Hard delete: no comments, drop everything.
+            $pdo->prepare('DELETE FROM post_likes WHERE post_id = :id')->execute([':id' => $id]);
+            $stmt = $pdo->prepare('DELETE FROM posts WHERE post_id = :id');
+            $stmt->execute([':id' => $id]);
+
+            return Json::write($response, 200, [
+                'success' => true,
+                'message' => 'Post deleted.',
+                'data'    => ['mode' => 'hard', 'post_id' => $id],
+            ]);
         } catch (PDOException $e) {
             return Json::write($response, 500, [
                 'success' => false,
                 'message' => 'Server error: ' . $e->getMessage(),
             ]);
         }
-
-        return Json::write($response, 200, [
-            'success' => true,
-            'message' => 'Post deleted.',
-            'data'    => ['post_id' => $id],
-        ]);
     }
 
     // -----------------------------------------------------------------
@@ -350,12 +440,21 @@ final class ForumController
         try {
             $pdo = Database::getConnection();
 
-            $stmt = $pdo->prepare('SELECT post_id FROM posts WHERE post_id = :id LIMIT 1');
+            $stmt = $pdo->prepare(
+                'SELECT post_id, is_deleted FROM posts WHERE post_id = :id LIMIT 1'
+            );
             $stmt->execute([':id' => $id]);
-            if (!$stmt->fetchColumn()) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$row) {
                 return Json::write($response, 404, [
                     'success' => false,
                     'message' => 'Post not found.',
+                ]);
+            }
+            if ((int) $row['is_deleted'] === 1) {
+                return Json::write($response, 400, [
+                    'success' => false,
+                    'message' => 'Cannot like a deleted post.',
                 ]);
             }
 
@@ -369,15 +468,21 @@ final class ForumController
                 $pdo->prepare(
                     'DELETE FROM post_likes WHERE post_id = :pid AND user_id = :uid'
                 )->execute([':pid' => $id, ':uid' => $userId]);
+                $pdo->prepare(
+                    'UPDATE posts SET likes = GREATEST(likes - 1, 0) WHERE post_id = :id'
+                )->execute([':id' => $id]);
                 $liked = false;
             } else {
                 $pdo->prepare(
                     'INSERT INTO post_likes (post_id, user_id) VALUES (:pid, :uid)'
                 )->execute([':pid' => $id, ':uid' => $userId]);
+                $pdo->prepare(
+                    'UPDATE posts SET likes = likes + 1 WHERE post_id = :id'
+                )->execute([':id' => $id]);
                 $liked = true;
             }
 
-            $stmt = $pdo->prepare('SELECT COUNT(*) FROM post_likes WHERE post_id = :id');
+            $stmt = $pdo->prepare('SELECT likes FROM posts WHERE post_id = :id');
             $stmt->execute([':id' => $id]);
             $count = (int) $stmt->fetchColumn();
         } catch (PDOException $e) {
@@ -435,12 +540,21 @@ final class ForumController
         try {
             $pdo = Database::getConnection();
 
-            $stmt = $pdo->prepare('SELECT post_id FROM posts WHERE post_id = :id LIMIT 1');
+            $stmt = $pdo->prepare(
+                'SELECT is_deleted FROM posts WHERE post_id = :id LIMIT 1'
+            );
             $stmt->execute([':id' => $postId]);
-            if (!$stmt->fetchColumn()) {
+            $post = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$post) {
                 return Json::write($response, 404, [
                     'success' => false,
                     'message' => 'Post not found.',
+                ]);
+            }
+            if ((int) $post['is_deleted'] === 1) {
+                return Json::write($response, 400, [
+                    'success' => false,
+                    'message' => 'Cannot comment on a deleted post.',
                 ]);
             }
 
@@ -472,23 +586,19 @@ final class ForumController
         ]);
     }
 
-    /**
-     * DELETE /api/forums/comments/{id}
-     *
-     * Flat path per the revised spec — no longer nested under a post id.
-     */
     public function deleteComment(Request $request, Response $response, array $args): Response
     {
-        $commentId = (int) ($args['id'] ?? 0);
+        $postId    = (int) ($args['id'] ?? 0);
+        $commentId = (int) ($args['comment_id'] ?? 0);
         $payload   = (array) $request->getAttribute('jwt_payload');
         $userId    = (int) ($payload['user_id'] ?? 0);
         $role      = (string) ($payload['role'] ?? '');
         $isAdmin   = in_array($role, ['admin', 'superadmin'], true);
 
-        if ($commentId <= 0) {
+        if ($postId <= 0 || $commentId <= 0) {
             return Json::write($response, 400, [
                 'success' => false,
-                'message' => 'Invalid comment id.',
+                'message' => 'Invalid post or comment id.',
             ]);
         }
 
@@ -496,11 +606,11 @@ final class ForumController
             $pdo = Database::getConnection();
 
             $stmt = $pdo->prepare(
-                'SELECT user_id FROM comments WHERE comment_id = :id LIMIT 1'
+                'SELECT user_id, post_id FROM comments WHERE comment_id = :id LIMIT 1'
             );
             $stmt->execute([':id' => $commentId]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            if (!$row) {
+            if (!$row || (int) $row['post_id'] !== $postId) {
                 return Json::write($response, 404, [
                     'success' => false,
                     'message' => 'Comment not found.',
@@ -532,23 +642,6 @@ final class ForumController
     // -----------------------------------------------------------------
     // helpers
     // -----------------------------------------------------------------
-
-    private function validatePostFields(string $title, string $content, string $tag): array
-    {
-        $errors = [];
-        if ($title === '' || mb_strlen($title) > 150) {
-            $errors['title'] = 'Title is required (max 150 chars).';
-        }
-        if ($content === '') {
-            $errors['content'] = 'Content is required.';
-        } elseif (mb_strlen($content) > 5000) {
-            $errors['content'] = 'Content must be 5000 characters or fewer.';
-        }
-        if (mb_strlen($tag) > 60) {
-            $errors['tag'] = 'Tag must be 60 characters or fewer.';
-        }
-        return $errors;
-    }
 
     /**
      * Return [post_id => true] for posts already liked by $userId.
@@ -587,22 +680,19 @@ final class ForumController
     private function fetchPostRow(PDO $pdo, int $id): ?array
     {
         $stmt = $pdo->prepare(
-            "SELECT p.post_id, p.user_id, p.title, p.content, p.tag, p.created_at,
+            "SELECT p.post_id, p.user_id, p.label_id, p.title, p.content,
+                    p.likes, p.is_deleted, p.created_at,
                     u.full_name AS author_name,
-                    (SELECT COUNT(*) FROM comments  c WHERE c.post_id = p.post_id) AS comment_count,
-                    (SELECT COUNT(*) FROM post_likes l WHERE l.post_id = p.post_id) AS likes
+                    l.name AS label_name,
+                    (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.post_id) AS comment_count
              FROM posts p
              JOIN users u ON u.user_id = p.user_id
+             LEFT JOIN labels l ON l.label_id = p.label_id
              WHERE p.post_id = :id LIMIT 1"
         );
         $stmt->execute([':id' => $id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$row) {
-            return null;
-        }
-        $row['comment_count'] = (int) $row['comment_count'];
-        $row['likes']         = (int) $row['likes'];
-        return $row;
+        return $row ?: null;
     }
 
     private function readJson(Request $request): array

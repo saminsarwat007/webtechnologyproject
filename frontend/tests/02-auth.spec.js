@@ -42,7 +42,7 @@ test.describe('Authentication (M1)', () => {
     await expect(page).toHaveURL(/\/admin\/dashboard/)
     await expect(page.getByRole('link', { name: 'Manage Jobs' })).toBeVisible()
     await expect(page.getByRole('link', { name: 'Companies' })).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Interviews' })).toBeVisible() // M8 admin link
+    await expect(page.getByRole('link', { name: 'Labels' })).toBeVisible() // M8 admin link
     // Regular admin should NOT see Users (superadmin only)
     await expect(page.getByRole('link', { name: 'Users', exact: true })).toHaveCount(0)
   })

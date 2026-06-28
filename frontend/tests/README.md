@@ -12,8 +12,8 @@ straight at the owner.
 | `02-auth.spec.js`               | M1 — Login, register, route guards, role-based nav               |
 | `03-student-flow.spec.js`       | M2 / M3 / M5 — Browse jobs, apply, profile                       |
 | `04-admin-flow.spec.js`         | M2 / M3 / M4 / M5 / M6 — Manage jobs, companies, applications, users |
-| `05-forum.spec.js`              | **M7 — Monika** — Forum list, search, tag filter, post CRUD, likes, comments, cascade delete, admin moderation |
-| `06-interviews.spec.js`         | **M8 — Monika** — Mock interview slot CRUD, student booking + cancel, admin evaluation (score + feedback), role gating |
+| `05-forum.spec.js`              | **M7 — Monika** — Forum list, search, post CRUD, likes, comments, soft/hard delete |
+| `06-labels.spec.js`             | **M8 — Monika** — Label CRUD, role gating, delete-while-in-use guard |
 | `helpers/auth.js`               | Shared login/logout + unique-id helpers                          |
 
 ## Prerequisites
