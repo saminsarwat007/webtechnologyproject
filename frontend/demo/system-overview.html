@@ -93,6 +93,57 @@
   }
   .highlight-box .label { color: var(--brand-light); font-weight: 700; }
   .reveal .slides .fragment.fade-up { transition: all 0.4s ease; }
+
+  /* ===== PRINT / PDF STYLES ===== */
+  /* These styles only apply when printing or exporting to PDF */
+  @media print {
+    /* Force exact color rendering so backgrounds don't get stripped */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+    /* Each slide section becomes its own page */
+    .reveal .slides section {
+      page-break-after: always !important;
+      page-break-inside: avoid !important;
+      overflow: hidden !important;
+      /* Fixed slide dimensions for consistent layout */
+      width: 1440px !important;
+      height: 900px !important;
+      padding: 40px !important;
+      box-sizing: border-box !important;
+      position: relative !important;
+      top: 0 !important;
+      left: 0 !important;
+      /* Dark background to match the night theme */
+      background: #191919 !important;
+    }
+    /* Last slide should not have a trailing blank page */
+    .reveal .slides section:last-child {
+      page-break-after: avoid !important;
+    }
+    /* Ensure the slides container doesn't add extra transforms */
+    .reveal .slides {
+      position: static !important;
+      transform: none !important;
+    }
+    /* Hide navigation controls in PDF */
+    .reveal .controls,
+    .reveal .progress,
+    .reveal .slide-number {
+      display: none !important;
+    }
+    /* Ensure images render properly */
+    .reveal section img.screenshot {
+      max-height: 500px !important;
+      object-fit: contain !important;
+    }
+    .reveal section img.screenshot-sm {
+      max-height: 380px !important;
+      object-fit: contain !important;
+    }
+  }
 </style>
 </head>
 <body>

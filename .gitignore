@@ -35,3 +35,10 @@ __pycache__/
 frontend/playwright-report/
 frontend/test-results/
 frontend/playwright/.cache/
+
+# Large media files (not needed in repo)
+frontend/demo/*.mp4
+frontend/demo/output/
+
+# OS files
+.DS_Store
