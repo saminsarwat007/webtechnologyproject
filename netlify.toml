@@ -1,0 +1,18 @@
+[build]
+  base = "frontend/"
+  command = "npm run build"
+  publish = "dist"
+
+# SPA redirect — all routes go to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# API proxy — redirect /api/* to the PHP backend
+# Change this URL to wherever the backend is hosted
+[[redirects]]
+  from = "/api/*"
+  to = "https://careerbridge-backend.000webhostapp.com/api/:splat"
+  status = 200
+  force = true
