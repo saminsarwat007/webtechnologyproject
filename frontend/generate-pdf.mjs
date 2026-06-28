@@ -2,7 +2,7 @@ import { chromium } from 'playwright'
 import fs from 'fs'
 import path from 'path'
 
-const url = 'http://localhost:5173/demo/system-overview.html'
+const url = 'file://' + path.resolve('demo/system-overview.html')
 const outputDir = 'demo/pdf-slides'
 const outputPath = 'demo/Champion.pdf'
 

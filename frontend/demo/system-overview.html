@@ -766,83 +766,79 @@
 </section>
 
 <!-- ================================================================ -->
-<!-- SLIDE 32: LOCALHOST DEMO SCREENSHOTS -->
+<!-- SLIDE 32: LOCALHOST SETUP INSTRUCTIONS -->
 <!-- ================================================================ -->
 <section>
-  <h2>Localhost Demo — Working System</h2>
-  <div class="two-col">
-    <div>
-      <img class="screenshot screenshot-sm" src="slides/local-01-login.png" alt="Login page">
-      <p style="font-size:0.45em; text-align:center;">Login Page (localhost:5173)</p>
-    </div>
-    <div>
-      <img class="screenshot screenshot-sm" src="slides/local-02-student-dashboard.png" alt="Student dashboard">
-      <p style="font-size:0.45em; text-align:center;">Student Dashboard — stats + recent applications</p>
-    </div>
+  <h2>Setup — Running Locally (Full Demo)</h2>
+  <p style="font-size:0.5em; color: var(--green);">✅ All features work: login, CRUD, database, charts</p>
+  <pre style="font-size:0.45em; line-height:1.6;"><code># 1. Clone the repo
+git clone https://github.com/azizah-utm/group-project-champion.git
+cd group-project-champion
+
+# 2. Set up the database (MySQL must be running)
+mysql -u root < database/schema.sql
+mysql -u root careerbridge < database/seed.sql
+
+# 3. Configure backend environment
+cp backend/.env.example backend/.env
+# Edit backend/.env with your MySQL credentials
+
+# 4. Install backend dependencies & start PHP server
+cd backend && composer install
+php -S localhost:8000 -t public
+# Backend runs on http://localhost:8000
+
+# 5. In a new terminal — install frontend deps & start Vue dev server
+cd frontend && npm install
+npm run dev
+# Frontend runs on http://localhost:5173
+
+# 6. Open http://localhost:5173 in your browser
+# Login with any demo account below</code></pre>
+  <div class="highlight-box" style="margin-top:10px;">
+    <span class="label">Prerequisites:</span> PHP 8+, Composer, MySQL 5.7+, Node.js 18+, npm
   </div>
-  <aside class="notes">These are screenshots of the system running locally. On the left is the login page. On the right is the student dashboard after logging in — it shows application statistics and a table of recent applications. Everything works because the PHP backend and MySQL database are running on localhost.</aside>
+  <aside class="notes">To run the full system locally: clone the repo, import the database schema and seed data into MySQL, configure the backend .env file with your database credentials, install PHP dependencies with composer, start the PHP server on port 8000, then in a separate terminal install frontend dependencies with npm and start the Vue dev server on port 5173. Open localhost:5173 in your browser and log in with any of the demo accounts. You need PHP 8+, Composer, MySQL, and Node.js installed.</aside>
 </section>
 
 <!-- ================================================================ -->
-<!-- SLIDE 33: LOCALHOST — BROWSE JOBS & APPLICATIONS -->
+<!-- SLIDE 33: NETLIFY + BACKEND SETUP INSTRUCTIONS -->
 <!-- ================================================================ -->
 <section>
-  <h2>Localhost Demo — Jobs &amp; Applications</h2>
-  <div class="two-col">
-    <div>
-      <img class="screenshot screenshot-sm" src="slides/local-03-browse-jobs.png" alt="Browse jobs">
-      <p style="font-size:0.45em; text-align:center;">Browse Jobs — search, filter, apply</p>
-    </div>
-    <div>
-      <img class="screenshot screenshot-sm" src="slides/local-04-my-applications.png" alt="My applications">
-      <p style="font-size:0.45em; text-align:center;">My Applications — track status, withdraw</p>
-    </div>
+  <h2>Setup — Online Deployment (Netlify + PHP Host)</h2>
+  <div class="highlight-box" style="margin-bottom:12px; border-left-color: var(--brand);">
+    <span class="label">Frontend (already deployed):</span>
+    <code>https://careerbridge-champion.netlify.app</code>
   </div>
-  <aside class="notes">On the left, the Browse Jobs page shows all active job listings with search and filter. On the right, the My Applications page shows the student's applications with status badges and tabs to filter by status. Both are fully functional on localhost.</aside>
-</section>
+  <p style="font-size:0.5em; color: var(--accent);">To make login &amp; API work online, host the PHP backend + MySQL:</p>
+  <pre style="font-size:0.45em; line-height:1.6;"><code># STEP 1: Create a free PHP + MySQL host (e.g., 000webhost.com)
+# - Sign up at https://www.000webhost.com
+# - Create a new site → get free subdomain + MySQL database
+# - Note your: database name, username, password, subdomain URL
 
-<!-- ================================================================ -->
-<!-- SLIDE 34: LOCALHOST — ADMIN VIEWS -->
-<!-- ================================================================ -->
-<section>
-  <h2>Localhost Demo — Admin Views</h2>
-  <div class="three-col">
-    <div>
-      <img class="screenshot screenshot-sm" src="slides/local-05-admin-dashboard.png" alt="Admin dashboard">
-      <p style="font-size:0.4em; text-align:center;">Admin Dashboard — stats + chart</p>
-    </div>
-    <div>
-      <img class="screenshot screenshot-sm" src="slides/local-06-manage-jobs.png" alt="Manage jobs">
-      <p style="font-size:0.4em; text-align:center;">Manage Jobs — full CRUD</p>
-    </div>
-    <div>
-      <img class="screenshot screenshot-sm" src="slides/local-07-manage-applications.png" alt="Manage applications">
-      <p style="font-size:0.4em; text-align:center;">Manage Applications — change status</p>
-    </div>
-  </div>
-  <aside class="notes">These are the admin views on localhost. The admin dashboard shows statistics and a Chart.js bar chart. Manage Jobs shows the full CRUD interface with edit and deactivate buttons. Manage Applications shows all applications with a dropdown to change status. All three are fully functional.</aside>
-</section>
+# STEP 2: Import the database
+# - Open phpMyAdmin on your hosting dashboard
+# - Import database/schema.sql, then database/seed.sql
 
-<!-- ================================================================ -->
-<!-- SLIDE 35: NETLIFY DEPLOYMENT SCREENSHOTS -->
-<!-- ================================================================ -->
-<section>
-  <h2>Online Deployment — Netlify</h2>
-  <div class="two-col">
-    <div>
-      <img class="screenshot screenshot-sm" src="slides/netlify-01-login.png" alt="Netlify login page">
-      <p style="font-size:0.45em; text-align:center;">Netlify — Login page loads ✅</p>
-    </div>
-    <div>
-      <img class="screenshot screenshot-sm" src="slides/netlify-03-homepage.png" alt="Netlify homepage">
-      <p style="font-size:0.45em; text-align:center;">Netlify — Homepage / SPA loads ✅</p>
-    </div>
-  </div>
-  <div class="highlight-box" style="margin-top:12px;">
-    <span class="label">Frontend status:</span> Deployed on Netlify — all Vue views, routing, and UI render correctly.<br>
-    <span class="label">Backend status:</span> PHP + MySQL need a PHP host (000webhost, InfinityFree, etc.) to enable login &amp; API calls.
-  </div>
-  <aside class="notes">These are screenshots of the online deployment on Netlify. The login page loads correctly and the Vue SPA renders perfectly. The frontend is fully deployed. However, login and API calls won't work until the PHP backend and MySQL database are hosted on a PHP hosting provider. The frontend is ready — it just needs a backend URL to connect to.</aside>
+# STEP 3: Upload backend files
+# - Upload everything in backend/ to your hosting's public_html folder
+# - Edit backend/.env with your hosting's database credentials:
+#   DB_HOST=localhost
+#   DB_NAME=your_000webhost_db_name
+#   DB_USER=your_000webhost_db_user
+#   DB_PASS=your_000webhost_db_password
+
+# STEP 4: Update Netlify redirect to point to your backend
+# In netlify.toml, change the API redirect URL:
+#   [[redirects]]
+#   from = "/api/*"
+#   to = "https://yoursite.000webhostapp.com/api/:splat"
+#   status = 200
+#   force = true
+
+# STEP 5: Redeploy frontend
+netlify deploy --dir=frontend/dist --prod</code></pre>
+  <aside class="notes">The frontend is already deployed on Netlify. To make the online version fully functional, you need to host the PHP backend and MySQL database on a free PHP hosting provider like 000webhost. Step 1: sign up and create a site. Step 2: import the database schema and seed data via phpMyAdmin. Step 3: upload the backend files and update the .env with your hosting database credentials. Step 4: update the netlify.toml file to redirect API calls to your new backend URL. Step 5: redeploy the frontend. After that, login and all API calls will work online.</aside>
 </section>
 
 <!-- ================================================================ -->
