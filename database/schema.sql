@@ -43,6 +43,9 @@ CREATE TABLE companies (
   FOREIGN KEY (created_by) REFERENCES users(user_id)
 ) ENGINE=InnoDB;
 
+-- ==================================================================
+-- SAMIN — M2: JOBS TABLE
+-- ==================================================================
 CREATE TABLE jobs (
   job_id INT AUTO_INCREMENT PRIMARY KEY,
   company_id INT NOT NULL,
@@ -69,6 +72,9 @@ CREATE TABLE student_profiles (
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 ) ENGINE=InnoDB;
 
+-- ==================================================================
+-- SAMIN — M3: APPLICATIONS TABLE
+-- ==================================================================
 CREATE TABLE applications (
   application_id INT AUTO_INCREMENT PRIMARY KEY,
   job_id INT NOT NULL,

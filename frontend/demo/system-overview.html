@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>CareerBridge — System Overview Presentation</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/night.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs@11.9.0/styles/atom-one-dark.min.css">
+<style>
+  :root {
+    --brand: #2563eb;
+    --brand-light: #3b82f6;
+    --accent: #f59e0b;
+    --green: #10b981;
+    --red: #ef4444;
+    --purple: #8b5cf6;
+    --teal: #14b8a6;
+  }
+  .reveal h1, .reveal h2, .reveal h3 {
+    text-transform: none;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .reveal h1 { font-size: 1.8em; }
+  .reveal h2 { font-size: 1.4em; }
+  .reveal h3 { font-size: 1.1em; }
+  .reveal p, .reveal li { font-size: 0.65em; line-height: 1.5; }
+  .reveal code { font-size: 0.55em; }
+  .reveal pre { width: 100%; }
+  .reveal pre code { max-height: 550px; }
+  .reveal section img.screenshot {
+    border: 2px solid #334155;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    max-height: 580px;
+    max-width: 100%;
+  }
+  .reveal section img.screenshot-sm {
+    max-height: 420px;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 12px;
+    border-radius: 999px;
+    font-size: 0.5em;
+    font-weight: 700;
+  }
+  .badge-m1 { background: var(--red); color: #fff; }
+  .badge-m2 { background: var(--brand); color: #fff; }
+  .badge-m3 { background: var(--accent); color: #fff; }
+  .badge-m4 { background: var(--green); color: #fff; }
+  .badge-m5 { background: var(--purple); color: #fff; }
+  .badge-m6 { background: var(--teal); color: #fff; }
+  .badge-m7 { background: #ec4899; color: #fff; }
+  .badge-m8 { background: #f97316; color: #fff; }
+  .flow-box {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.55em;
+    font-weight: 600;
+    margin: 4px;
+  }
+  .flow-arrow { font-size: 0.8em; color: var(--brand-light); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .stat-card {
+    background: #1e293b;
+    border-radius: 10px;
+    padding: 12px 16px;
+    text-align: center;
+  }
+  .stat-card .num { font-size: 1.2em; font-weight: 800; color: var(--brand-light); }
+  .stat-card .lbl { font-size: 0.5em; color: #94a3b8; }
+  .module-card {
+    background: #0f172a;
+    border-radius: 10px;
+    padding: 14px;
+    border: 1px solid #334155;
+  }
+  .module-card h3 { font-size: 0.9em; margin-bottom: 6px; }
+  .module-card p { font-size: 0.5em; color: #94a3b8; }
+  .title-slide h1 { font-size: 2.2em; }
+  .title-slide .subtitle { font-size: 0.8em; color: #94a3b8; }
+  .title-slide .author { font-size: 0.6em; color: var(--brand-light); margin-top: 20px; }
+  .highlight-box {
+    background: #1e293b;
+    border-left: 4px solid var(--brand);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.55em;
+    text-align: left;
+  }
+  .highlight-box .label { color: var(--brand-light); font-weight: 700; }
+  .reveal .slides .fragment.fade-up { transition: all 0.4s ease; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ================================================================ -->
+<!-- SLIDE 1: TITLE -->
+<!-- ================================================================ -->
+<section class="title-slide">
+  <h1>CareerBridge</h1>
+  <p class="subtitle">Student Internship &amp; Job Application Management System</p>
+  <p class="subtitle">Full System Overview — All 8 Modules</p>
+  <p class="author">Team CHAMPION</p>
+  <p style="font-size:0.5em; color:#64748b;">SECJ3483 Web Technology — Group Project</p>
+  <aside class="notes">Welcome to our presentation of CareerBridge, a full-stack web application for managing student internship and job applications. This system was built by Team CHAMPION using Vue 3 for the frontend and PHP Slim 4 for the backend. I'll walk you through the entire system — all 8 modules, the architecture, the database, and live screenshots of every feature.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 2: AGENDA -->
+<!-- ================================================================ -->
+<section>
+  <h2>What We'll Cover</h2>
+  <ol style="font-size:0.6em;">
+    <li>System Architecture &amp; Tech Stack</li>
+    <li><span class="badge badge-m1">M1</span> Authentication &amp; User Management</li>
+    <li><span class="badge badge-m2">M2</span> Job Management — Full CRUD</li>
+    <li><span class="badge badge-m3">M3</span> Application Tracking</li>
+    <li><span class="badge badge-m4">M4</span> Company Management</li>
+    <li><span class="badge badge-m5">M5</span> Reporting &amp; Analytics</li>
+    <li><span class="badge badge-m6">M6</span> Student Profile</li>
+    <li><span class="badge badge-m7">M7</span> Forum / Community</li>
+    <li><span class="badge badge-m8">M8</span> Mock Interviews</li>
+    <li>Database Design &amp; Security</li>
+  </ol>
+  <aside class="notes">Here's the agenda. We'll start with the system architecture and tech stack, then go through each of the 8 modules with screenshots. We'll cover authentication, job management, application tracking, company management, analytics, student profiles, the forum, and mock interviews. Finally, we'll talk about the database design and security features.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 3: TECH STACK -->
+<!-- ================================================================ -->
+<section>
+  <h2>Tech Stack</h2>
+  <div class="two-col">
+    <div class="module-card" style="border-color: var(--brand);">
+      <h3 style="color: var(--brand-light);">Frontend</h3>
+      <ul style="font-size:0.55em; line-height:1.8;">
+        <li><strong>Vue 3</strong> — Composition API with &lt;script setup&gt;</li>
+        <li><strong>Vite</strong> — dev server + build tool</li>
+        <li><strong>Vue Router</strong> — SPA navigation with role guards</li>
+        <li><strong>Axios</strong> — HTTP client with JWT interceptor</li>
+        <li><strong>Tailwind CSS</strong> — utility-first styling</li>
+        <li><strong>Chart.js</strong> — analytics dashboard charts</li>
+      </ul>
+    </div>
+    <div class="module-card" style="border-color: var(--accent);">
+      <h3 style="color: var(--accent);">Backend</h3>
+      <ul style="font-size:0.55em; line-height:1.8;">
+        <li><strong>PHP 8.5</strong> — server-side language</li>
+        <li><strong>Slim 4</strong> — micro-framework for REST API</li>
+        <li><strong>PDO</strong> — prepared statements (SQL injection safe)</li>
+        <li><strong>JWT</strong> — Firebase JWT library for auth tokens</li>
+        <li><strong>MySQL</strong> — relational database (InnoDB)</li>
+        <li><strong>Composer</strong> — PHP dependency manager</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">Our tech stack: On the frontend, we use Vue 3 with the Composition API, Vite as the build tool, Vue Router for navigation with role-based guards, Axios for API calls with automatic JWT attachment, Tailwind CSS for styling, and Chart.js for the analytics dashboard. On the backend, we use PHP 8.5 with the Slim 4 micro-framework, PDO for all database queries with prepared statements to prevent SQL injection, Firebase JWT for authentication tokens, and MySQL as our database with InnoDB for foreign key support.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 4: ARCHITECTURE -->
+<!-- ================================================================ -->
+<section>
+  <h2>System Architecture</h2>
+  <div style="font-size:0.6em; text-align:center; padding:20px;">
+    <span class="flow-box" style="background:#1e293b; border:1px solid #475569;">Browser<br><small>User</small></span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-box" style="background:#0f172a; border:1px solid var(--brand);">Vue.js Frontend<br><small>localhost:5173</small></span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-box" style="background:#1e293b; border:1px solid var(--accent);">Vite Proxy<br><small>/api → :8000</small></span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-box" style="background:#0f172a; border:1px solid var(--green);">PHP Slim 4 Backend<br><small>localhost:8000</small></span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-box" style="background:#1e293b; border:1px solid var(--red);">MySQL Database<br><small>careerbridge</small></span>
+  </div>
+  <div class="highlight-box" style="margin-top:20px;">
+    <span class="label">Request flow:</span> User clicks → Vue sends HTTP request → Vite proxy forwards to PHP → Slim routes to Controller → PDO queries MySQL → JSON response → Vue updates UI reactively.
+  </div>
+  <aside class="notes">The architecture is a standard client-server model. The user's browser loads the Vue.js frontend. When the user interacts with the app, Vue sends HTTP requests through the Vite dev proxy, which forwards them to the PHP Slim 4 backend. The backend routes each request to the appropriate controller, which uses PDO to query the MySQL database. The response comes back as JSON, and Vue updates the UI reactively without a page reload. This is a Single Page Application architecture.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 5: MODULE OVERVIEW -->
+<!-- ================================================================ -->
+<section>
+  <h2>8 Modules — Who Built What</h2>
+  <div class="three-col" style="gap:12px;">
+    <div class="module-card" style="border-color: var(--red);">
+      <h3><span class="badge badge-m1">M1</span> Auth &amp; Users</h3>
+      <p>JWT login, register, role management, user directory. Shared infrastructure: Database, Json, Axios, JWT middleware.</p>
+    </div>
+    <div class="module-card" style="border-color: var(--brand);">
+      <h3><span class="badge badge-m2">M2</span> Job Management</h3>
+      <p>Full CRUD for job listings. Admins create/edit/deactivate. Students browse, search, filter. Soft delete.</p>
+    </div>
+    <div class="module-card" style="border-color: var(--accent);">
+      <h3><span class="badge badge-m3">M3</span> Applications</h3>
+      <p>Students apply, track status, withdraw. Admins review and change status. Duplicate prevention.</p>
+    </div>
+  </div>
+  <div class="three-col" style="gap:12px; margin-top:12px;">
+    <div class="module-card" style="border-color: var(--green);">
+      <h3><span class="badge badge-m4">M4</span> Companies</h3>
+      <p>Admin CRUD for company profiles. Linked to jobs via foreign key. Referential integrity checks.</p>
+    </div>
+    <div class="module-card" style="border-color: var(--purple);">
+      <h3><span class="badge badge-m5">M5</span> Analytics</h3>
+      <p>Admin dashboard with stat cards and Chart.js bar chart. Aggregates data from jobs + applications.</p>
+    </div>
+    <div class="module-card" style="border-color: var(--teal);">
+      <h3><span class="badge badge-m6">M6</span> Student Profile</h3>
+      <p>Matric number, programme, CGPA, skills, resume. Upsert pattern (insert or update).</p>
+    </div>
+  </div>
+  <div style="margin-top:12px;">
+    <div class="module-card" style="border-color: #ec4899; display:inline-block; width:48%; vertical-align:top; margin-right:4%;">
+      <h3><span class="badge badge-m7">M7</span> Forum / Community</h3>
+      <p>Posts with tags, comments, like toggle. Search and filter by tag.</p>
+    </div>
+    <div class="module-card" style="border-color: #f97316; display:inline-block; width:48%; vertical-align:top;">
+      <h3><span class="badge badge-m8">M8</span> Mock Interviews</h3>
+      <p>Admins create interview slots. Students book them. Admins evaluate with scores and feedback.</p>
+    </div>
+  </div>
+  <aside class="notes">Our system has 8 modules. M1 is authentication and user management — this is the shared foundation that all other modules depend on. M2 is job management with full CRUD. M3 is application tracking. M4 is company management. M5 is reporting and analytics with charts. M6 is student profiles. M7 is a forum for community discussion. M8 is mock interviews for practice. Each module was built by a different team member, but they all connect through the database and shared infrastructure.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 6: DATABASE SCHEMA OVERVIEW -->
+<!-- ================================================================ -->
+<section>
+  <h2>Database — 10 Tables</h2>
+  <div class="two-col">
+    <div>
+      <h3>Core Tables</h3>
+      <ul style="font-size:0.5em; line-height:1.8;">
+        <li><strong>users</strong> — id, name, email, password_hash, role</li>
+        <li><strong>companies</strong> — id, name, industry, location, description</li>
+        <li><strong>jobs</strong> — id, company_id (FK), posted_by (FK), title, type, deadline, is_active</li>
+        <li><strong>applications</strong> — id, job_id (FK), user_id (FK), cover_letter, status, UNIQUE(job_id, user_id)</li>
+        <li><strong>student_profiles</strong> — user_id (FK), matric_no, programme, cgpa, skills</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Community &amp; Interviews</h3>
+      <ul style="font-size:0.5em; line-height:1.8;">
+        <li><strong>posts</strong> — id, user_id (FK), title, content, tag</li>
+        <li><strong>comments</strong> — id, post_id (FK), user_id (FK), content</li>
+        <li><strong>post_likes</strong> — post_id + user_id (composite PK)</li>
+        <li><strong>interview_slots</strong> — id, interviewer_id (FK), scheduled_at, is_booked</li>
+        <li><strong>mock_interviews</strong> — slot_id (FK), student_id (FK), status, feedback, score</li>
+      </ul>
+    </div>
+  </div>
+  <div class="highlight-box" style="margin-top:12px;">
+    <span class="label">All tables use InnoDB</span> with foreign key constraints for referential integrity. Passwords stored as bcrypt hashes (cost 12).
+  </div>
+  <aside class="notes">The database has 10 tables. The core tables are users, companies, jobs, applications, and student_profiles. The community and interview tables are posts, comments, post_likes, interview_slots, and mock_interviews. All tables use InnoDB engine with foreign key constraints. The applications table has a unique constraint on job_id and user_id to prevent duplicate applications. All passwords are stored as bcrypt hashes with a cost factor of 12 — we never store plain text passwords.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 7: DEMO CREDENTIALS -->
+<!-- ================================================================ -->
+<section>
+  <h2>Demo Credentials</h2>
+  <p style="font-size:0.6em;">Password for all accounts: <code>Password123!</code></p>
+  <table style="font-size:0.55em; width:100%;">
+    <thead>
+      <tr><th>Role</th><th>Email</th><th>What to Show</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Student</td><td>samin@student.utm.my</td><td>Browse jobs, apply, my applications, profile, forum, book interview</td></tr>
+      <tr><td>Admin</td><td>farizal@careerbridge.my</td><td>Dashboard, manage jobs, manage applications, companies, interviews</td></tr>
+      <tr><td>Super Admin</td><td>superadmin@careerbridge.my</td><td>Everything admin + users directory</td></tr>
+    </tbody>
+  </table>
+  <aside class="notes">These are the demo credentials. All accounts use the same password: Password123! We'll start as a student to show the student-facing features, then switch to admin to show the management side, and finally super admin for the user directory.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 8: LOGIN PAGE -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m1">M1</span> Login — Entry Point</h2>
+  <img class="screenshot screenshot-sm" src="slides/01-login-page.png" alt="Login page">
+  <p style="font-size:0.5em;">Frontend validates email format + password length. Backend verifies bcrypt hash and returns JWT token stored in localStorage.</p>
+  <aside class="notes">This is the login page — the entry point to the system. The frontend validates the email format and password length before sending the request. On the backend, the password is verified against the bcrypt hash using password_verify(). If correct, a JWT token is generated containing the user's ID, email, and role. This token is stored in localStorage and attached to every future request via an Axios interceptor.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 9: STUDENT DASHBOARD -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m6">M6</span> Student Dashboard</h2>
+  <img class="screenshot" src="slides/02-student-dashboard.png" alt="Student dashboard">
+  <p style="font-size:0.5em;">Shows application stats (total, pending, accepted, rejected) and 5 most recent applications. Data from GET /api/applications (student-scoped).</p>
+  <aside class="notes">After logging in as a student, this is the dashboard. It shows application statistics — total, pending, accepted, and rejected — and a table of the 5 most recent applications with their statuses. This data comes from the applications endpoint, which returns only the logged-in student's applications because the backend filters by user_id from the JWT token.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 10: BROWSE JOBS -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m2">M2</span> Browse Jobs (Student)</h2>
+  <img class="screenshot" src="slides/03-browse-jobs.png" alt="Browse jobs">
+  <p style="font-size:0.5em;">GET /api/jobs — loads all active jobs. Each card shows title, company, type badge, description, and deadline. Apply button disabled if already applied.</p>
+  <aside class="notes">This is the Browse Jobs page. It calls GET /api/jobs to load all active job listings. Each job is rendered as a card showing the title, company name, a colored type badge, a short description, and the application deadline. The Apply button is automatically disabled if the student has already applied to that job — this is done by loading the student's applications in parallel and checking job IDs.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 11: SEARCH & FILTER -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m2">M2</span> Search &amp; Type Filter</h2>
+  <div class="two-col">
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/04-browse-jobs-search.png" alt="Search">
+      <p style="font-size:0.5em;">Search box with <strong>400ms debounce</strong> — filters by title or company name.</p>
+    </div>
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/05-browse-jobs-filter.png" alt="Filter">
+      <p style="font-size:0.5em;">Dropdown filters by type: internship, full-time, part-time. Updates grid reactively.</p>
+    </div>
+  </div>
+  <aside class="notes">On the left, the search box has a 400ms debounce — it waits until the user stops typing before filtering, which prevents laggy UI. On the right, the dropdown filters by job type. Both update the grid reactively using Vue's computed properties — no page reload needed.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 12: JOB DETAIL -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m2">M2</span> Job Detail View</h2>
+  <img class="screenshot screenshot-sm" src="slides/06-job-detail.png" alt="Job detail">
+  <p style="font-size:0.5em;">GET /api/jobs/{id} — Shows full description, requirements, deadline, company info. Backend uses JOIN to get company + posted_by name in one query.</p>
+  <aside class="notes">Clicking View on a job card opens the detail page. This calls GET /api/jobs/{id} which returns the full job info including description, requirements, deadline, and company details. The backend uses a 3-table JOIN query to get the company name, industry, and the name of the admin who posted the job — all in a single query.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 13: APPLY MODAL -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m3">M3</span> Apply for a Job</h2>
+  <div class="two-col">
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/07-apply-modal.png" alt="Apply modal empty">
+      <p style="font-size:0.5em;">Click "Apply" opens a modal with optional cover letter.</p>
+    </div>
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/08-apply-modal-filled.png" alt="Apply modal filled">
+      <p style="font-size:0.5em;">Student writes a cover letter (max 5000 chars). Character counter shown.</p>
+    </div>
+  </div>
+  <aside class="notes">When a student clicks Apply, a modal pops up with an optional cover letter field. The cover letter is limited to 5000 characters with a live character counter. On submit, the frontend sends POST /api/applications with the job_id and cover_letter.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 14: APPLY SUCCESS -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m3">M3</span> Application Submitted!</h2>
+  <img class="screenshot" src="slides/09-apply-success.png" alt="Apply success">
+  <p style="font-size:0.5em;">POST /api/applications — Backend checks: job exists, job active, not already applied (409 if duplicate). Toast confirms success. Apply button now disabled.</p>
+  <aside class="notes">After submitting, a green toast notification confirms success. On the backend, three checks happen before inserting: 1) Does the job exist? 2) Is the job still active? 3) Has this student already applied? If any check fails, the application is not created. The Apply button is now disabled on the frontend because the job ID was added to the applied set.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 15: MY APPLICATIONS -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m3">M3</span> My Applications (Student)</h2>
+  <img class="screenshot" src="slides/10-my-applications.png" alt="My applications">
+  <p style="font-size:0.5em;">GET /api/applications — Students see only their own. Tabs filter by status. Can withdraw pending applications only.</p>
+  <aside class="notes">This is the My Applications page. The GET /api/applications endpoint is role-aware: students see only their own applications, admins see all. The tabs at the top filter by status — All, Pending, Reviewed, Accepted, Rejected. Students can withdraw an application, but only if its status is still 'pending'. Once an admin reviews it, the withdraw button disappears.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 16: MY APPLICATIONS — PENDING TAB -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m3">M3</span> My Applications — Pending Tab</h2>
+  <img class="screenshot" src="slides/11-my-applications-pending.png" alt="My applications pending">
+  <p style="font-size:0.5em;">Filtering by "Pending" tab shows only applications awaiting review. Withdraw button available for these.</p>
+  <aside class="notes">Here we've clicked the Pending tab to show only applications that are still awaiting review. The withdraw button is available for these — the student can cancel their application before an admin reviews it. A confirm dialog appears before the withdrawal is finalized.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 17: STUDENT PROFILE -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m6">M6</span> Student Profile</h2>
+  <img class="screenshot screenshot-sm" src="slides/12-student-profile.png" alt="Student profile">
+  <p style="font-size:0.5em;">Matric number, programme, CGPA (0.00–4.00), skills, resume text. Uses PUT /api/profile (upsert — INSERT ... ON DUPLICATE KEY UPDATE).</p>
+  <aside class="notes">The student profile page lets students fill in their matric number, programme, CGPA, skills, and resume text. It uses an upsert pattern — INSERT ... ON DUPLICATE KEY UPDATE — so the same endpoint handles both creating and updating the profile. The CGPA field is validated to be between 0.00 and 4.00.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 18: ADMIN DASHBOARD -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m5">M5</span> Admin Dashboard</h2>
+  <img class="screenshot" src="slides/13-admin-dashboard.png" alt="Admin dashboard">
+  <p style="font-size:0.5em;">GET /api/admin/analytics — Stat cards + Chart.js bar chart showing application status breakdown. Aggregates data from jobs and applications tables.</p>
+  <aside class="notes">Now switching to the admin side. The admin dashboard shows stat cards with total jobs, active jobs, total applications, and counts by status. Below that is a Chart.js bar chart showing the breakdown of application statuses — pending, reviewed, accepted, rejected. This data comes from the analytics endpoint which runs COUNT queries on the jobs and applications tables.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 19: MANAGE JOBS -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m2">M2</span> Manage Jobs (Admin)</h2>
+  <img class="screenshot" src="slides/14-manage-jobs.png" alt="Manage jobs">
+  <p style="font-size:0.5em;">Admin sees all jobs with Edit and Delete (deactivate) buttons. Full CRUD interface. Status badge shows Active/Inactive.</p>
+  <aside class="notes">This is the Manage Jobs page for admins. It shows all jobs in a table with Edit and Delete buttons. Delete is actually a soft delete — it sets is_active to 0 instead of removing the record. The status badge shows whether each job is Active or Inactive. The Add Job button opens a modal form for creating new job listings.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 20: CREATE JOB MODAL -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m2">M2</span> Create Job — Form with Validation</h2>
+  <div class="two-col">
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/15-create-job-modal.png" alt="Create job empty">
+      <p style="font-size:0.5em;">Empty form: title, company dropdown, type, deadline, description, requirements.</p>
+    </div>
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/16-create-job-filled.png" alt="Create job filled">
+      <p style="font-size:0.5em;">Frontend validates: required fields, future deadline. Backend validates again.</p>
+    </div>
+  </div>
+  <aside class="notes">The create job form has fields for title, company dropdown — which is populated from the companies API — type, deadline with a date picker, description, and requirements. The frontend validates required fields and checks that the deadline is in the future. The backend validates everything again because frontend validation can be bypassed by sending requests directly to the API.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 21: MANAGE APPLICATIONS -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m3">M3</span> Manage Applications (Admin)</h2>
+  <img class="screenshot" src="slides/17-manage-applications.png" alt="Manage applications">
+  <p style="font-size:0.5em;">Admins see ALL applications. Dropdown changes status via PUT /api/applications/{id}/status. Uses <strong>optimistic update</strong> — UI updates instantly, rolls back on error.</p>
+  <aside class="notes">On the admin side, this Manage Applications page shows ALL applications in the system. The admin can change the status using the dropdown — pending, reviewed, accepted, rejected. The frontend uses an optimistic update pattern: it updates the UI immediately, then sends the API request. If the request fails, the UI rolls back to the previous status and shows an error toast. This makes the app feel fast and responsive.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 22: MANAGE COMPANIES -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m4">M4</span> Manage Companies (Admin)</h2>
+  <div class="two-col">
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/18-manage-companies.png" alt="Manage companies">
+      <p style="font-size:0.5em;">Admin sees all companies with Edit and Delete buttons.</p>
+    </div>
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/19-create-company-modal.png" alt="Create company">
+      <p style="font-size:0.5em;">Create company form: name, industry, location, description.</p>
+    </div>
+  </div>
+  <p style="font-size:0.5em;">Companies are linked to jobs via foreign key. Cannot delete a company that has jobs attached (returns 400 error).</p>
+  <aside class="notes">This is the Manage Companies page. Admins can create, edit, and delete companies. The backend prevents deleting a company that still has jobs attached — it checks for linked jobs first and returns a 400 error if any exist. This is referential integrity — you can't have jobs pointing to a company that doesn't exist. The company dropdown in the Create Job form is populated from this module's API.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 23: MOCK INTERVIEWS -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m8">M8</span> Mock Interviews (Admin)</h2>
+  <img class="screenshot screenshot-sm" src="slides/20-manage-interviews.png" alt="Manage interviews">
+  <p style="font-size:0.5em;">Admins create interview slots with date/time. Students book available slots. Admins evaluate with scores and feedback text.</p>
+  <aside class="notes">The Mock Interviews module lets admins create interview time slots. Students can book an available slot from their dashboard. After the interview, the admin can add a score and written feedback. The student can see their interview history and results on their sessions page.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 24: FORUM -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m7">M7</span> Forum / Community</h2>
+  <img class="screenshot screenshot-sm" src="slides/21-forum-list.png" alt="Forum list">
+  <p style="font-size:0.5em;">Students post questions and discussions with tags. Other students can comment and like posts. Search and filter by tag.</p>
+  <aside class="notes">The Forum module is a community discussion board. Students can create posts with a title, content, and a free-text tag. Other students can comment on posts and like them. The like toggle uses a composite primary key on post_likes (post_id, user_id) to prevent double-liking. The forum supports search and filtering by tag.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 25: ADMIN USERS -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m1">M1</span> Admin Users (Super Admin Only)</h2>
+  <img class="screenshot screenshot-sm" src="slides/23-admin-users.png" alt="Admin users">
+  <p style="font-size:0.5em;">GET /api/admin/users — Only superadmin role can access. Read-only directory of all accounts with role badges.</p>
+  <aside class="notes">The Admin Users page is only accessible to super admins. It shows a read-only directory of all user accounts with their names, emails, and role badges. The JWT middleware enforces this — the route has JwtMiddleware('superadmin'), so even regular admins get a 403 Forbidden response if they try to access it.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 26: SECURITY -->
+<!-- ================================================================ -->
+<section>
+  <h2>Security Features</h2>
+  <div class="two-col">
+    <div>
+      <h3>Backend Security</h3>
+      <ul style="font-size:0.55em;">
+        <li><strong>PDO Prepared Statements</strong> — all queries use <code>:placeholder</code> syntax, preventing SQL injection</li>
+        <li><strong>JWT Role Gating</strong> — <code>JwtMiddleware</code> on protected routes</li>
+        <li><strong>Bcrypt Passwords</strong> — <code>password_hash()</code> with cost 12</li>
+        <li><strong>Ownership checks</strong> — students can only access their own data</li>
+        <li><strong>Soft delete</strong> — jobs deactivated, not erased (audit trail)</li>
+        <li><strong>Duplicate prevention</strong> — UNIQUE constraint on (job_id, user_id)</li>
+        <li><strong>Referential integrity</strong> — can't delete company with linked jobs</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Frontend Security</h3>
+      <ul style="font-size:0.55em;">
+        <li><strong>Route guards</strong> — router checks role before showing page</li>
+        <li><strong>Auto-logout on 401</strong> — Axios interceptor clears token</li>
+        <li><strong>Client-side validation</strong> — all forms validated before API call</li>
+        <li><strong>Confirm dialogs</strong> — before destructive actions (delete, withdraw)</li>
+        <li><strong>JWT in localStorage</strong> — attached to every request via interceptor</li>
+        <li><strong>Disabled buttons</strong> — Apply disabled if already applied</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">Security is implemented on both sides. On the backend: PDO prepared statements prevent SQL injection, JWT middleware enforces role-based access control, passwords are hashed with bcrypt at cost 12, ownership checks prevent students from accessing other students' data, and referential integrity prevents deleting companies with linked jobs. On the frontend: route guards block unauthorized page access, the Axios interceptor auto-logs out on 401, confirm dialogs prevent accidental destructive actions, and buttons are disabled when actions aren't available.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 27: HTTP STATUS CODES -->
+<!-- ================================================================ -->
+<section>
+  <h2>HTTP Status Codes Used</h2>
+  <div class="three-col">
+    <div class="stat-card" style="border:1px solid var(--green);">
+      <div class="num" style="color:#10b981;">200</div><div class="lbl">OK — GET, PUT, DELETE success</div>
+    </div>
+    <div class="stat-card" style="border:1px solid var(--green);">
+      <div class="num" style="color:#10b981;">201</div><div class="lbl">Created — POST success</div>
+    </div>
+    <div class="stat-card" style="border:1px solid var(--accent);">
+      <div class="num" style="color:#f59e0b;">400</div><div class="lbl">Bad Request — validation failed</div>
+    </div>
+  </div>
+  <div class="three-col" style="margin-top:12px;">
+    <div class="stat-card" style="border:1px solid var(--red);">
+      <div class="num" style="color:#ef4444;">401</div><div class="lbl">Unauthorized — bad/missing JWT</div>
+    </div>
+    <div class="stat-card" style="border:1px solid var(--red);">
+      <div class="num" style="color:#ef4444;">403</div><div class="lbl">Forbidden — wrong role or not owner</div>
+    </div>
+    <div class="stat-card" style="border:1px solid #64748b;">
+      <div class="num" style="color:#94a3b8;">404</div><div class="lbl">Not Found — resource missing</div>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top:12px;">
+    <div class="stat-card" style="display:inline-block; border:1px solid var(--accent);">
+      <div class="num" style="color:#f59e0b;">409</div><div class="lbl">Conflict — already applied / duplicate</div>
+    </div>
+  </div>
+  <aside class="notes">We use proper HTTP status codes throughout the entire API. 200 for successful reads, updates, and deletes. 201 for successful creation. 400 for validation errors. 401 for missing or invalid JWT tokens. 403 for wrong role or not-owner situations. 404 for resources that don't exist. And 409 for conflicts like duplicate applications. These standard codes tell the frontend exactly what happened so it can show the right error message.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 28: API ENDPOINTS SUMMARY -->
+<!-- ================================================================ -->
+<section>
+  <h2>Complete API — All Endpoints</h2>
+  <div class="two-col">
+    <div>
+      <h3 style="font-size:0.8em;"><span class="badge badge-m1">M1</span> Auth &amp; Users</h3>
+      <ul style="font-size:0.45em; line-height:1.6;">
+        <li>POST /api/auth/login — Login</li>
+        <li>POST /api/auth/register — Register</li>
+        <li>GET /api/admin/users — Super admin only</li>
+      </ul>
+      <h3 style="font-size:0.8em;"><span class="badge badge-m2">M2</span> Jobs</h3>
+      <ul style="font-size:0.45em; line-height:1.6;">
+        <li>GET /api/jobs — List (public)</li>
+        <li>GET /api/jobs/{id} — Detail (public)</li>
+        <li>POST /api/jobs — Create (admin)</li>
+        <li>PUT /api/jobs/{id} — Update (admin)</li>
+        <li>DELETE /api/jobs/{id} — Soft delete (admin)</li>
+      </ul>
+      <h3 style="font-size:0.8em;"><span class="badge badge-m3">M3</span> Applications</h3>
+      <ul style="font-size:0.45em; line-height:1.6;">
+        <li>GET /api/applications — Role-aware list</li>
+        <li>POST /api/applications — Apply (student)</li>
+        <li>PUT /api/applications/{id}/status — Update (admin)</li>
+        <li>DELETE /api/applications/{id} — Withdraw (student)</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="font-size:0.8em;"><span class="badge badge-m4">M4</span> Companies</h3>
+      <ul style="font-size:0.45em; line-height:1.6;">
+        <li>GET /api/companies — List (public)</li>
+        <li>POST /api/companies — Create (admin)</li>
+        <li>PUT /api/companies/{id} — Update (admin)</li>
+        <li>DELETE /api/companies/{id} — Delete (admin)</li>
+      </ul>
+      <h3 style="font-size:0.8em;"><span class="badge badge-m5">M5</span> Analytics</h3>
+      <ul style="font-size:0.45em; line-height:1.6;">
+        <li>GET /api/admin/analytics — Dashboard stats (admin)</li>
+      </ul>
+      <h3 style="font-size:0.8em;"><span class="badge badge-m6">M6</span> Profile</h3>
+      <ul style="font-size:0.45em; line-height:1.6;">
+        <li>GET /api/profile — View own profile</li>
+        <li>PUT /api/profile — Upsert profile</li>
+      </ul>
+      <h3 style="font-size:0.8em;"><span class="badge badge-m7">M7</span> Forum</h3>
+      <ul style="font-size:0.45em; line-height:1.6;">
+        <li>GET /api/posts — List posts</li>
+        <li>POST /api/posts — Create post</li>
+        <li>POST /api/comments — Add comment</li>
+        <li>POST /api/posts/{id}/like — Toggle like</li>
+      </ul>
+      <h3 style="font-size:0.8em;"><span class="badge badge-m8">M8</span> Interviews</h3>
+      <ul style="font-size:0.45em; line-height:1.6;">
+        <li>GET /api/interview-slots — List slots</li>
+        <li>POST /api/interview-slots — Create (admin)</li>
+        <li>POST /api/mock-interviews/book — Book (student)</li>
+        <li>PUT /api/mock-interviews/{id} — Evaluate (admin)</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">This is the complete API — all endpoints across all 8 modules. M1 has login, register, and user directory. M2 has 5 endpoints for job CRUD. M3 has 4 endpoints for applications. M4 has 4 endpoints for companies. M5 has 1 analytics endpoint. M6 has 2 profile endpoints. M7 has 4 forum endpoints. M8 has 4 interview endpoints. That's over 25 API endpoints total, all secured with JWT authentication and role-based middleware.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 29: TEAM & MODULES -->
+<!-- ================================================================ -->
+<section>
+  <h2>Team CHAMPION — Module Ownership</h2>
+  <table style="font-size:0.55em; width:100%;">
+    <thead>
+      <tr><th>Module</th><th>Name</th><th>Owner</th><th>Key Feature</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="badge badge-m1">M1</span></td><td>Auth &amp; Users</td><td>Areeb</td><td>JWT login, role middleware, shared infrastructure</td></tr>
+      <tr><td><span class="badge badge-m2">M2</span></td><td>Job Management</td><td>Samin</td><td>Full CRUD, soft delete, search + filter</td></tr>
+      <tr><td><span class="badge badge-m3">M3</span></td><td>Application Tracking</td><td>Samin</td><td>Apply, withdraw, role-aware listing, status flow</td></tr>
+      <tr><td><span class="badge badge-m4">M4</span></td><td>Company Management</td><td>Mariam</td><td>CRUD, referential integrity with jobs</td></tr>
+      <tr><td><span class="badge badge-m5">M5</span></td><td>Reporting &amp; Analytics</td><td>Mariam</td><td>Dashboard stats, Chart.js visualization</td></tr>
+      <tr><td><span class="badge badge-m6">M6</span></td><td>Student Profile</td><td>Areeb</td><td>Upsert pattern, CGPA validation</td></tr>
+      <tr><td><span class="badge badge-m7">M7</span></td><td>Forum / Community</td><td>Monika</td><td>Posts, comments, likes, tag filtering</td></tr>
+      <tr><td><span class="badge badge-m8">M8</span></td><td>Mock Interviews</td><td>Monika</td><td>Slot booking, evaluation, scores</td></tr>
+    </tbody>
+  </table>
+  <aside class="notes">Here's the team breakdown. Areeb built M1 (authentication and shared infrastructure) and M6 (student profiles). Samin built M2 (job management) and M3 (application tracking). Mariam built M4 (company management) and M5 (analytics). Monika built M7 (forum) and M8 (mock interviews). Together, these 8 modules form a complete career bridge platform for students.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 30: STATS SUMMARY -->
+<!-- ================================================================ -->
+<section>
+  <h2>System at a Glance</h2>
+  <div class="three-col">
+    <div class="stat-card"><div class="num">8</div><div class="lbl">Modules</div></div>
+    <div class="stat-card"><div class="num">25+</div><div class="lbl">API Endpoints</div></div>
+    <div class="stat-card"><div class="num">10</div><div class="lbl">Database Tables</div></div>
+  </div>
+  <div class="three-col" style="margin-top:12px;">
+    <div class="stat-card"><div class="num">3</div><div class="lbl">User Roles</div></div>
+    <div class="stat-card"><div class="num">15+</div><div class="lbl">Vue Views</div></div>
+    <div class="stat-card"><div class="num">8</div><div class="lbl">Backend Controllers</div></div>
+  </div>
+  <div class="highlight-box" style="margin-top:20px;">
+    <span class="label">Built with:</span> Vue 3 + Vite + Tailwind CSS + PHP Slim 4 + MySQL + JWT + PDO + Chart.js
+  </div>
+  <aside class="notes">To summarize the system: 8 modules, over 25 API endpoints, 10 database tables, 3 user roles (student, admin, super admin), more than 15 Vue views, and 8 backend controllers. The entire system is built with Vue 3, Vite, Tailwind CSS on the frontend, and PHP Slim 4, MySQL, JWT, and PDO on the backend.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 31: THANK YOU -->
+<!-- ================================================================ -->
+<section class="title-slide">
+  <h1>Thank You</h1>
+  <p class="subtitle">CareerBridge — Student Internship &amp; Job Application Management System</p>
+  <p class="author">Team CHAMPION</p>
+  <p style="font-size:0.5em; color:#64748b; margin-top:30px;">
+    Vue 3 · PHP Slim 4 · MySQL · JWT Authentication · PDO Prepared Statements · Chart.js
+  </p>
+  <p style="font-size:0.5em; color:#64748b;">
+    Any questions?
+  </p>
+  <aside class="notes">That covers the entire CareerBridge system. We've walked through all 8 modules — from authentication to job management, application tracking, companies, analytics, student profiles, the forum, and mock interviews. The system is secured with JWT authentication and role-based access control, uses PDO prepared statements throughout to prevent SQL injection, and provides a responsive, modern user interface built with Vue 3 and Tailwind CSS. Any questions?</aside>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    controls: true,
+    progress: true,
+    width: 1440,
+    height: 900,
+    margin: 0.04,
+    plugins: [RevealHighlight, RevealNotes]
+  });
+</script>
+</body>
+</html>

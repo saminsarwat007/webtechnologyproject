@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>CareerBridge — Samin's Modules (M2 + M3) Presentation</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/night.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs@11.9.0/styles/atom-one-dark.min.css">
+<style>
+  :root {
+    --brand: #2563eb;
+    --brand-light: #3b82f6;
+    --accent: #f59e0b;
+    --green: #10b981;
+    --red: #ef4444;
+  }
+  .reveal h1, .reveal h2, .reveal h3 {
+    text-transform: none;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .reveal h1 { font-size: 1.8em; }
+  .reveal h2 { font-size: 1.4em; }
+  .reveal h3 { font-size: 1.1em; }
+  .reveal p, .reveal li { font-size: 0.65em; line-height: 1.5; }
+  .reveal code { font-size: 0.55em; }
+  .reveal pre { width: 100%; }
+  .reveal pre code { max-height: 550px; }
+  .reveal section img.screenshot {
+    border: 2px solid #334155;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    max-height: 580px;
+    max-width: 100%;
+  }
+  .reveal section img.screenshot-sm {
+    max-height: 420px;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 12px;
+    border-radius: 999px;
+    font-size: 0.5em;
+    font-weight: 700;
+  }
+  .badge-m2 { background: var(--brand); color: #fff; }
+  .badge-m3 { background: var(--accent); color: #fff; }
+  .badge-crud { background: var(--green); color: #fff; }
+  .badge-auth { background: var(--red); color: #fff; }
+  .flow-box {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.55em;
+    font-weight: 600;
+    margin: 4px;
+  }
+  .flow-arrow { font-size: 0.8em; color: var(--brand-light); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .stat-card {
+    background: #1e293b;
+    border-radius: 10px;
+    padding: 12px 16px;
+    text-align: center;
+  }
+  .stat-card .num { font-size: 1.2em; font-weight: 800; color: var(--brand-light); }
+  .stat-card .lbl { font-size: 0.5em; color: #94a3b8; }
+  .endpoint-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 0.5em;
+  }
+  .method-get { color: #10b981; font-weight: 800; min-width: 50px; }
+  .method-post { color: #f59e0b; font-weight: 800; min-width: 50px; }
+  .method-put { color: #3b82f6; font-weight: 800; min-width: 50px; }
+  .method-del { color: #ef4444; font-weight: 800; min-width: 50px; }
+  .title-slide h1 { font-size: 2.2em; }
+  .title-slide .subtitle { font-size: 0.8em; color: #94a3b8; }
+  .title-slide .author { font-size: 0.6em; color: var(--brand-light); margin-top: 20px; }
+  .section-title { text-align: center; }
+  .section-title h2 { font-size: 1.6em; color: var(--brand-light); }
+  .highlight-box {
+    background: #1e293b;
+    border-left: 4px solid var(--brand);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.55em;
+    text-align: left;
+  }
+  .highlight-box .label { color: var(--brand-light); font-weight: 700; }
+  .reveal .slides .fragment.fade-up { transition: all 0.4s ease; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ================================================================ -->
+<!-- SLIDE 1: TITLE -->
+<!-- ================================================================ -->
+<section class="title-slide">
+  <h1>CareerBridge</h1>
+  <p class="subtitle">Student Internship &amp; Job Application Management System</p>
+  <p class="subtitle">Module 2: Job Management &amp; Module 3: Application Tracking</p>
+  <p class="author">Samin Sarwat (A22EC4040)</p>
+  <p style="font-size:0.5em; color:#64748b;">SECJ3483 Web Technology — Group Project — Team CHAMPION</p>
+  <aside class="notes">Hi, I'm Samin. This presentation covers my two modules: Module 2 — Job Management and Module 3 — Application Tracking. I'll walk through the backend API, database design, frontend views, and security features with screenshots of the live website.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 2: AGENDA -->
+<!-- ================================================================ -->
+<section>
+  <h2>What I'll Cover</h2>
+  <ol style="font-size:0.6em;">
+    <li><span class="badge badge-m2">M2</span> Job Management — Full CRUD (Backend + Frontend)</li>
+    <li><span class="badge badge-m3">M3</span> Application Tracking — Apply, Status, Withdraw</li>
+    <li>API Routes &amp; JWT Role-Based Access Control</li>
+    <li>Database Design (jobs + applications tables)</li>
+    <li>Live Website Demo Screenshots</li>
+    <li>Key Code Walkthrough (Backend + Frontend)</li>
+    <li>Security &amp; Validation Features</li>
+  </ol>
+  <aside class="notes">Here's what I'll cover: M2 Job Management with full CRUD, M3 Application Tracking with apply and withdraw, API routes with JWT role-based access, database design, live screenshots, code walkthrough, and security features.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 3: WHAT MY MODULES DO (SIMPLE EXPLANATION) -->
+<!-- ================================================================ -->
+<section>
+  <h2>What My Modules Do (In Simple Words)</h2>
+  <div class="two-col">
+    <div style="background:#0f172a; border:1px solid var(--brand); border-radius:10px; padding:16px;">
+      <h3 style="color:var(--brand-light);"><span class="badge badge-m2">M2</span> Job Management</h3>
+      <p style="font-size:0.6em; line-height:1.6;">
+        This module lets <strong>admins post job listings</strong> for students to browse.
+        Think of it like a job board.
+      </p>
+      <ul style="font-size:0.55em; line-height:1.7;">
+        <li>Admins can <strong>create</strong> new job posts (title, company, type, deadline, description)</li>
+        <li>Admins can <strong>edit</strong> existing job posts</li>
+        <li>Admins can <strong>deactivate</strong> a job (soft delete — hides it from students but keeps the data)</li>
+        <li>Students can <strong>browse</strong> all active jobs, <strong>search</strong> by name, and <strong>filter</strong> by type</li>
+        <li>Students can view a <strong>full detail page</strong> for each job</li>
+      </ul>
+      <p style="font-size:0.5em; color:#94a3b8; margin-top:8px;">
+        In short: admins manage the job board, students browse it.
+      </p>
+    </div>
+    <div style="background:#0f172a; border:1px solid var(--accent); border-radius:10px; padding:16px;">
+      <h3 style="color:var(--accent);"><span class="badge badge-m3">M3</span> Application Tracking</h3>
+      <p style="font-size:0.6em; line-height:1.6;">
+        This module lets <strong>students apply for jobs</strong> and <strong>admins track those applications</strong>.
+        Think of it like an application tracker.
+      </p>
+      <ul style="font-size:0.55em; line-height:1.7;">
+        <li>Students can <strong>apply</strong> to a job with an optional cover letter</li>
+        <li>A student <strong>cannot apply twice</strong> to the same job (blocked by the system)</li>
+        <li>Students can see <strong>all their applications</strong> and the status of each one</li>
+        <li>Students can <strong>withdraw</strong> an application — but only if it's still "pending"</li>
+        <li>Admins can see <strong>every application</strong> in the system and <strong>change the status</strong> (pending → reviewed → accepted/rejected)</li>
+      </ul>
+      <p style="font-size:0.5em; color:#94a3b8; margin-top:8px;">
+        In short: students apply and track, admins review and decide.
+      </p>
+    </div>
+  </div>
+  <aside class="notes">In simple terms: Module 2 is a job board — admins post jobs, students browse them. Module 3 is an application tracker — students apply for jobs and can see their status, admins review applications and accept or reject them. A student can't apply to the same job twice, and can only withdraw while the application is still pending. Once an admin reviews it, the student can't withdraw anymore.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 4: WHERE MY CODE LIVES (DIRECTORY STRUCTURE) -->
+<!-- ================================================================ -->
+<section>
+  <h2>Where My Code Lives</h2>
+  <p style="font-size:0.55em; color:#94a3b8;">These are the files I wrote for M2 and M3 — everything else was built by my teammates.</p>
+  <pre style="font-size:0.5em; line-height:1.5;"><code>CareerBridge/
+│
+├── backend/
+│   └── src/
+│       └── Modules/
+│           ├── Jobs/                          <span class="badge badge-m2">M2</span>
+│           │   └── JobController.php          ← Full CRUD: list, detail, create, update, soft-delete
+│           │                                     (GET, POST, PUT, DELETE /api/jobs)
+│           │
+│           └── Applications/                  <span class="badge badge-m3">M3</span>
+│               └── ApplicationController.php ← Apply, list (role-aware), update status, withdraw
+│                                                 (GET, POST, PUT, DELETE /api/applications)
+│
+├── frontend/
+│   └── src/
+│       └── views/
+│           ├── BrowseJobs.vue                 <span class="badge badge-m2">M2</span> ← Student: browse + search + filter + apply modal
+│           ├── JobDetail.vue                  <span class="badge badge-m2">M2</span> ← Student: full job detail page
+│           ├── ManageJobs.vue                 <span class="badge badge-m2">M2</span> ← Admin: create, edit, deactivate jobs
+│           ├── MyApplications.vue             <span class="badge badge-m3">M3</span> ← Student: track applications + withdraw
+│           └── ManageApplications.vue         <span class="badge badge-m3">M3</span> ← Admin: review + change application status
+│
+└── database/
+    ├── schema.sql                             ← I designed the `jobs` and `applications` tables
+    └── seed.sql                               ← I wrote seed data for jobs and applications</code></pre>
+  <div class="highlight-box" style="margin-top:12px;">
+    <span class="label">Total: 2 backend controllers + 5 frontend views + 2 database tables</span> — all in my GitHub repo.
+  </div>
+  <aside class="notes">If the lecturer asks where my code is, here's the map. On the backend, I wrote JobController.php for M2 and ApplicationController.php for M3 — both in the Modules folder. On the frontend, I built 5 Vue views: BrowseJobs and JobDetail for students browsing jobs, ManageJobs for admins managing jobs, MyApplications for students tracking their applications, and ManageApplications for admins reviewing applications. I also designed the jobs and applications database tables in schema.sql and wrote their seed data in seed.sql.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 5: ARCHITECTURE OVERVIEW -->
+<!-- ================================================================ -->
+<section>
+  <h2>How It All Connects</h2>
+  <div style="font-size:0.6em; text-align:center; padding:20px;">
+    <span class="flow-box" style="background:#1e293b; border:1px solid #475569;">Browser<br><small>User</small></span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-box" style="background:#0f172a; border:1px solid var(--brand);">Vue.js Frontend<br><small>localhost:5173</small></span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-box" style="background:#1e293b; border:1px solid var(--accent);">Vite Proxy<br><small>/api → :8000</small></span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-box" style="background:#0f172a; border:1px solid var(--green);">PHP Slim 4 Backend<br><small>localhost:8000</small></span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-box" style="background:#1e293b; border:1px solid var(--red);">MySQL Database<br><small>careerbridge</small></span>
+  </div>
+  <div class="highlight-box" style="margin-top:20px;">
+    <span class="label">My modules sit in the backend controllers + frontend views:</span><br>
+    <code>backend/src/Modules/Jobs/JobController.php</code> → M2<br>
+    <code>backend/src/Modules/Applications/ApplicationController.php</code> → M3<br>
+    <code>frontend/src/views/BrowseJobs.vue</code> + <code>ManageJobs.vue</code> → M2 Frontend<br>
+    <code>frontend/src/views/MyApplications.vue</code> + <code>ManageApplications.vue</code> → M3 Frontend
+  </div>
+  <aside class="notes">The architecture is simple: the browser loads the Vue.js frontend, which sends API requests through the Vite proxy to the PHP backend, which talks to MySQL. My modules sit in specific controllers and views — JobController and ApplicationController on the backend, BrowseJobs and ManageJobs for M2, MyApplications and ManageApplications for M3.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 4: API ROUTES (M2 + M3) -->
+<!-- ================================================================ -->
+<section>
+  <h2>My API Routes</h2>
+  <div class="two-col">
+    <div>
+      <h3><span class="badge badge-m2">M2</span> Job Management</h3>
+      <div class="endpoint-row"><span class="method-get">GET</span> /api/jobs — List all active jobs</div>
+      <div class="endpoint-row"><span class="method-get">GET</span> /api/jobs/{id} — Single job detail</div>
+      <div class="endpoint-row"><span class="method-post">POST</span> /api/jobs — Create job <small>(admin)</small></div>
+      <div class="endpoint-row"><span class="method-put">PUT</span> /api/jobs/{id} — Update job <small>(admin)</small></div>
+      <div class="endpoint-row"><span class="method-del">DEL</span> /api/jobs/{id} — Soft delete <small>(admin)</small></div>
+    </div>
+    <div>
+      <h3><span class="badge badge-m3">M3</span> Application Tracking</h3>
+      <div class="endpoint-row"><span class="method-get">GET</span> /api/applications — List (role-aware)</div>
+      <div class="endpoint-row"><span class="method-post">POST</span> /api/applications — Apply <small>(student)</small></div>
+      <div class="endpoint-row"><span class="method-put">PUT</span> /api/applications/{id}/status <small>(admin)</small></div>
+      <div class="endpoint-row"><span class="method-del">DEL</span> /api/applications/{id} — Withdraw <small>(student)</small></div>
+    </div>
+  </div>
+  <div class="highlight-box" style="margin-top:16px;">
+    <span class="label">Role-based access via JWT middleware:</span><br>
+    <code>->add(new JwtMiddleware(['admin', 'superadmin']))</code> — Only admins can create/edit/delete jobs<br>
+    <code>->add(new JwtMiddleware('student'))</code> — Only students can apply &amp; withdraw
+  </div>
+  <aside class="notes">These are my 9 API endpoints. M2 has 5 endpoints for jobs — public GET for listing and detail, admin-only POST/PUT/DELETE for management. M3 has 4 endpoints for applications — role-aware GET, student-only POST to apply, admin PUT to change status, student DELETE to withdraw. The JWT middleware enforces who can access each route.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 5: DATABASE TABLES -->
+<!-- ================================================================ -->
+<section>
+  <h2>Database Design — My Tables</h2>
+  <div class="two-col">
+    <div>
+      <h3><span class="badge badge-m2">jobs</span> table</h3>
+      <pre><code class="sql">CREATE TABLE jobs (
+  job_id INT AUTO_INCREMENT PRIMARY KEY,
+  company_id INT NOT NULL,
+  posted_by  INT NOT NULL,
+  title       VARCHAR(150) NOT NULL,
+  type ENUM('internship','fulltime',
+             'parttime') NOT NULL,
+  description TEXT NOT NULL,
+  requirements TEXT,
+  deadline DATE NOT NULL,
+  is_active TINYINT(1) DEFAULT 1,
+  created_at TIMESTAMP DEFAULT
+    CURRENT_TIMESTAMP,
+  FOREIGN KEY (company_id)
+    REFERENCES companies(company_id),
+  FOREIGN KEY (posted_by)
+    REFERENCES users(user_id)
+);</code></pre>
+    </div>
+    <div>
+      <h3><span class="badge badge-m3">applications</span> table</h3>
+      <pre><code class="sql">CREATE TABLE applications (
+  application_id INT AUTO_INCREMENT
+    PRIMARY KEY,
+  job_id  INT NOT NULL,
+  user_id INT NOT NULL,
+  cover_letter TEXT,
+  status ENUM('pending','reviewed',
+    'accepted','rejected')
+    DEFAULT 'pending',
+  applied_at TIMESTAMP DEFAULT
+    CURRENT_TIMESTAMP,
+  FOREIGN KEY (job_id)
+    REFERENCES jobs(job_id),
+  FOREIGN KEY (user_id)
+    REFERENCES users(user_id),
+  UNIQUE KEY uniq_job_user
+    (job_id, user_id)
+);</code></pre>
+    </div>
+  </div>
+  <p style="font-size:0.5em; color:#94a3b8; margin-top:10px;">
+    <strong>UNIQUE (job_id, user_id)</strong> — a student cannot apply to the same job twice.
+    Foreign keys link jobs → companies and jobs → users (who posted it).
+  </p>
+  <aside class="notes">These are my two database tables. The jobs table has foreign keys to companies and users — each job belongs to a company and was posted by a user. The applications table has a unique constraint on (job_id, user_id) which prevents a student from applying to the same job twice at the database level. The status field uses an ENUM type with four values: pending, reviewed, accepted, rejected.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 6: DATABASE DEMO COMMANDS -->
+<!-- ================================================================ -->
+<section>
+  <h2>Database Demo — Commands to Show the DR</h2>
+  <pre><code class="sql">-- 1. Open MySQL and select the database
+mysql -u root
+USE careerbridge;
+
+-- 2. Show all tables
+SHOW TABLES;
+
+-- 3. See the structure of my tables (M2 + M3)
+DESCRIBE jobs;
+DESCRIBE applications;
+
+-- 4. See the data inside my tables
+SELECT * FROM jobs;
+SELECT * FROM applications;
+
+-- 5. Show how tables connect (jobs + companies)
+SELECT j.job_id, j.title, j.type, c.name AS company,
+       j.deadline, j.is_active
+FROM jobs j
+JOIN companies c ON c.company_id = j.company_id;
+
+-- 6. Show applications with student + job info
+SELECT a.application_id, u.full_name AS student,
+       j.title AS job, a.status, a.applied_at
+FROM applications a
+JOIN users u ON u.user_id = a.user_id
+JOIN jobs j ON j.job_id = a.job_id;
+
+-- 7. Count applications by status (powers the admin chart)
+SELECT status, COUNT(*) AS count
+FROM applications GROUP BY status;</code></pre>
+  <div class="highlight-box" style="margin-top:10px;">
+    <span class="label">Quick one-liner if DR just wants a fast look:</span><br>
+    <code>mysql -u root -e "USE careerbridge; SHOW TABLES; SELECT * FROM jobs LIMIT 5; SELECT * FROM applications LIMIT 5;"</code>
+  </div>
+  <aside class="notes">If the lecturer asks to see the database, these are the commands. First open MySQL and select the careerbridge database. SHOW TABLES lists all 10 tables. DESCRIBE shows the structure of my tables — columns, types, foreign keys. SELECT * shows the actual data. The JOIN queries show how tables connect — jobs link to companies, applications link to both jobs and users. The last query counts applications by status, which is what powers the admin dashboard chart.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 7: DEMO CREDENTIALS -->
+<!-- ================================================================ -->
+<section>
+  <h2>Demo Credentials</h2>
+  <p style="font-size:0.6em;">Password for all accounts: <code>Password123!</code></p>
+  <table style="font-size:0.55em; width:100%;">
+    <thead>
+      <tr><th>Role</th><th>Email</th><th>What to Show</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Student</td><td>samin@student.utm.my</td><td>Browse jobs, apply, my applications, profile</td></tr>
+      <tr><td>Admin</td><td>farizal@careerbridge.my</td><td>Dashboard, manage jobs, manage applications, companies</td></tr>
+      <tr><td>Super Admin</td><td>superadmin@careerbridge.my</td><td>Everything admin + users page</td></tr>
+    </tbody>
+  </table>
+  <aside class="notes">These are the login credentials for the demo. All accounts use the same password: Password123! I'll start as a student to show M2 and M3 from the student side, then switch to admin to show the management side.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 7: LOGIN PAGE SCREENSHOT -->
+<!-- ================================================================ -->
+<section>
+  <h2>Login — Entry Point</h2>
+  <img class="screenshot screenshot-sm" src="slides/01-login-page.png" alt="Login page">
+  <p style="font-size:0.5em;">Frontend validates email format + password length before sending POST /api/auth/login.
+  JWT token is returned and stored in localStorage.</p>
+  <aside class="notes">This is the login page. The frontend validates the email format and password length before sending the request. When login succeeds, the backend returns a JWT token which is stored in localStorage. Every future request includes this token for authentication.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 7: STUDENT DASHBOARD -->
+<!-- ================================================================ -->
+<section>
+  <h2>Student Dashboard</h2>
+  <img class="screenshot" src="slides/02-student-dashboard.png" alt="Student dashboard">
+  <p style="font-size:0.5em;">Shows application stats (total, pending, accepted, rejected) and 5 most recent applications.</p>
+  <aside class="notes">After logging in as a student, this is the dashboard. It shows stats — how many applications total, pending, accepted, rejected — and a table of the 5 most recent applications with their statuses. This data comes from GET /api/applications which returns only the logged-in student's applications.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 8: BROWSE JOBS -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m2">M2</span> Browse Jobs (Student)</h2>
+  <img class="screenshot" src="slides/03-browse-jobs.png" alt="Browse jobs">
+  <p style="font-size:0.5em;">GET /api/jobs loads all active jobs. Each card shows title, company, type badge, short description, and deadline.</p>
+  <aside class="notes">This is the Browse Jobs page — my M2 frontend. It calls GET /api/jobs to load all active job listings. Each job is rendered as a card showing the title, company name, a colored type badge (internship, full-time, part-time), a short description, and the application deadline. The Apply button is disabled if the student has already applied.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 9: SEARCH + FILTER -->
+<!-- ================================================================ -->
+<section>
+  <h2>Search &amp; Type Filter</h2>
+  <div class="two-col">
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/04-browse-jobs-search.png" alt="Search">
+      <p style="font-size:0.5em;">Search box with <strong>400ms debounce</strong> — filters by title or company name.</p>
+    </div>
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/05-browse-jobs-filter.png" alt="Filter">
+      <p style="font-size:0.5em;">Dropdown filters by type: internship, full-time, part-time. Updates grid reactively.</p>
+    </div>
+  </div>
+  <aside class="notes">On the left, the search box has a 400ms debounce — it waits until the user stops typing before filtering, which prevents laggy UI. On the right, the dropdown filters by job type. Both update the grid reactively using Vue's computed properties — no page reload needed.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 10: JOB DETAIL -->
+<!-- ================================================================ -->
+<section>
+  <h2>Job Detail View</h2>
+  <img class="screenshot screenshot-sm" src="slides/06-job-detail.png" alt="Job detail">
+  <p style="font-size:0.5em;">GET /api/jobs/{id} — Shows full description, requirements, deadline, and company info.</p>
+  <aside class="notes">Clicking View on a job card opens the detail page. This calls GET /api/jobs/{id} which returns the full job info including description, requirements, deadline, and company details. The backend uses a JOIN query to get company info along with the job data in a single query.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 11: APPLY MODAL -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m3">M3</span> Apply for a Job</h2>
+  <div class="two-col">
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/07-apply-modal.png" alt="Apply modal empty">
+      <p style="font-size:0.5em;">Click "Apply" opens a modal with optional cover letter.</p>
+    </div>
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/08-apply-modal-filled.png" alt="Apply modal filled">
+      <p style="font-size:0.5em;">Student writes a cover letter (max 5000 chars).</p>
+    </div>
+  </div>
+  <aside class="notes">When a student clicks Apply, a modal opens with an optional cover letter field. The cover letter is limited to 5000 characters. On submit, the frontend sends POST /api/applications with the job_id and cover_letter.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 12: APPLY SUCCESS -->
+<!-- ================================================================ -->
+<section>
+  <h2>Application Submitted!</h2>
+  <img class="screenshot" src="slides/09-apply-success.png" alt="Apply success">
+  <p style="font-size:0.5em;">POST /api/applications — Backend checks: job exists, job active, not already applied (409 if duplicate). Toast confirms success.</p>
+  <aside class="notes">After submitting the application, a green toast notification confirms success. On the backend, three checks happen: 1) Does the job exist? (404 if not) 2) Is the job still active? (400 if deactivated) 3) Has this student already applied? (409 if duplicate). Only then is the application inserted with status 'pending'.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 13: APPLY CODE (BACKEND) -->
+<!-- ================================================================ -->
+<section>
+  <h2>Backend Code — Apply (POST)</h2>
+  <pre><code class="php">public function create(Request $request, Response $response): Response
+{
+    $payload = (array) $request->getAttribute('jwt_payload');
+    $userId  = (int) ($payload['user_id'] ?? 0);
+    $body    = $this->readJson($request);
+    $jobId   = (int) ($body['job_id'] ?? 0);
+
+    // 1. Validate input
+    if ($jobId <= 0) {
+        return Json::write($response, 400, [
+            'success' => false,
+            'message' => 'Validation failed.',
+            'errors'  => ['job_id' => 'job_id is required.'],
+        ]);
+    }
+
+    // 2. Check job exists and is active
+    $stmt = $pdo->prepare('SELECT job_id, is_active FROM jobs WHERE job_id = :id');
+    $stmt->execute([':id' => $jobId]);
+    $job = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$job) return Json::write($response, 404, [...]);
+    if ((int) $job['is_active'] !== 1) return Json::write($response, 400, [...]);
+
+    // 3. Check not already applied (prevent duplicates)
+    $stmt = $pdo->prepare(
+        'SELECT application_id FROM applications
+         WHERE job_id = :jid AND user_id = :uid LIMIT 1'
+    );
+    $stmt->execute([':jid' => $jobId, ':uid' => $userId]);
+    if ($stmt->fetch()) {
+        return Json::write($response, 409, [
+            'success' => false,
+            'message' => 'You have already applied for this job.',
+        ]);
+    }
+
+    // 4. Insert application with PDO prepared statement
+    $stmt = $pdo->prepare(
+        'INSERT INTO applications (job_id, user_id, cover_letter, status)
+         VALUES (:jid, :uid, :cl, "pending")'
+    );
+    $stmt->execute([
+        ':jid' => $jobId, ':uid' => $userId,
+        ':cl'  => $coverLetter !== '' ? $coverLetter : null,
+    ]);
+
+    return Json::write($response, 201, [
+        'success' => true,
+        'message' => 'Application submitted.',
+    ]);
+}</code></pre>
+  <aside class="notes">This is the backend code for applying to a job. Step 1: validate the job_id. Step 2: check the job exists and is active using a prepared statement. Step 3: check if the student already applied — if yes, return 409 Conflict. Step 4: insert the application with PDO prepared statements. All user input goes through named placeholders, which prevents SQL injection.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 14: MY APPLICATIONS -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m3">M3</span> My Applications (Student)</h2>
+  <img class="screenshot" src="slides/10-my-applications.png" alt="My applications">
+  <p style="font-size:0.5em;">GET /api/applications — Students see only their own. Tabs filter by status. Can withdraw pending applications.</p>
+  <aside class="notes">This is the My Applications page — my M3 frontend. The GET /api/applications endpoint is role-aware: students see only their own applications, admins see all. The tabs at the top filter by status — All, Pending, Reviewed, Accepted, Rejected. Students can withdraw an application, but only if its status is still 'pending'.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 15: WITHDRAW LOGIC -->
+<!-- ================================================================ -->
+<section>
+  <h2>Withdraw — Ownership &amp; Status Check</h2>
+  <pre><code class="php">public function delete(Request $request, Response $response, array $args): Response
+{
+    $id      = (int) ($args['id'] ?? 0);
+    $payload = (array) $request->getAttribute('jwt_payload');
+    $userId  = (int) ($payload['user_id'] ?? 0);
+
+    $stmt = $pdo->prepare(
+        'SELECT user_id, status FROM applications
+         WHERE application_id = :id LIMIT 1'
+    );
+    $stmt->execute([':id' => $id]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // 1. Not found → 404
+    if (!$row) return Json::write($response, 404, [...]);
+
+    // 2. Not your application → 403 Forbidden
+    if ((int) $row['user_id'] !== $userId) {
+        return Json::write($response, 403, [
+            'success' => false,
+            'message' => 'You can only withdraw your own applications.',
+        ]);
+    }
+
+    // 3. Already processed → 400 (only pending can be withdrawn)
+    if ($row['status'] !== 'pending') {
+        return Json::write($response, 400, [
+            'success' => false,
+            'message' => 'Only pending applications can be withdrawn.',
+        ]);
+    }
+
+    // 4. Hard delete from database
+    $stmt = $pdo->prepare('DELETE FROM applications WHERE application_id = :id');
+    $stmt->execute([':id' => $id]);
+
+    return Json::write($response, 200, [
+        'success' => true,
+        'message' => 'Application withdrawn.',
+    ]);
+}</code></pre>
+  <aside class="notes">The withdraw endpoint has three security checks: 1) Does the application exist? (404) 2) Does it belong to this user? (403 Forbidden if not) 3) Is it still pending? (400 if already reviewed/accepted/rejected). Only then is it hard-deleted from the database. This prevents students from withdrawing applications that have already been processed by an admin.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 16: ADMIN DASHBOARD -->
+<!-- ================================================================ -->
+<section>
+  <h2>Admin Dashboard</h2>
+  <img class="screenshot" src="slides/13-admin-dashboard.png" alt="Admin dashboard">
+  <p style="font-size:0.5em;">GET /api/admin/analytics — Stats + Chart.js bar chart showing application status breakdown.</p>
+  <aside class="notes">Now switching to the admin side. The admin dashboard shows stat cards and a Chart.js bar chart with the breakdown of application statuses. This data comes from GET /api/admin/analytics which counts total jobs, active jobs, total applications, and groups applications by status.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 17: MANAGE JOBS -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m2">M2</span> Manage Jobs (Admin)</h2>
+  <img class="screenshot" src="slides/14-manage-jobs.png" alt="Manage jobs">
+  <p style="font-size:0.5em;">Admin sees all jobs with Edit and Delete (deactivate) buttons. Full CRUD interface.</p>
+  <aside class="notes">This is the Manage Jobs page for admins. It shows all jobs in a table with Edit and Delete buttons. Delete is actually a soft delete — it sets is_active to 0 instead of removing the record. The Add Job button opens a modal form for creating new job listings. This is the admin side of my M2 module.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 18: CREATE JOB MODAL -->
+<!-- ================================================================ -->
+<section>
+  <h2>Create Job — Form with Validation</h2>
+  <div class="two-col">
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/15-create-job-modal.png" alt="Create job empty">
+      <p style="font-size:0.5em;">Empty form: title, company dropdown, type, deadline, description, requirements.</p>
+    </div>
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/16-create-job-filled.png" alt="Create job filled">
+      <p style="font-size:0.5em;">Frontend validates: required fields, future deadline. Backend validates again.</p>
+    </div>
+  </div>
+  <aside class="notes">The create job form has fields for title, company (dropdown), type (internship/full-time/part-time), deadline (date picker), description, and requirements. The frontend validates required fields and checks that the deadline is in the future. The backend validates everything again — you should always validate on both sides because frontend validation can be bypassed.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 19: CREATE JOB CODE (BACKEND) -->
+<!-- ================================================================ -->
+<section>
+  <h2>Backend Code — Create Job (POST)</h2>
+  <pre><code class="php">public function create(Request $request, Response $response): Response
+{
+    $body    = $this->readJson($request);
+    $payload = (array) $request->getAttribute('jwt_payload');
+    
+    // Validate all fields
+    $errors = $this->validate($body);
+    if (!empty($errors)) {
+        return Json::write($response, 400, [
+            'success' => false,
+            'message' => 'Validation failed.',
+            'errors'  => $errors,
+        ]);
+    }
+
+    // Insert using PDO prepared statements (SQL injection safe)
+    $pdo = Database::getConnection();
+    $stmt = $pdo->prepare(
+        'INSERT INTO jobs (company_id, posted_by, title, type,
+             description, requirements, deadline, is_active)
+         VALUES (:cid, :uid, :title, :type,
+             :descr, :req, :deadline, 1)'
+    );
+    $stmt->execute([
+        ':cid'      => (int) $body['company_id'],
+        ':uid'      => (int) $payload['user_id'],
+        ':title'    => $body['title'],
+        ':type'     => $body['type'],
+        ':descr'    => $body['description'],
+        ':req'      => $body['requirements'] ?? null,
+        ':deadline' => $body['deadline'],
+    ]);
+    $id = (int) $pdo->lastInsertId();
+
+    return Json::write($response, 201, [
+        'success' => true,
+        'message' => 'Job created.',
+        'data'    => $row,
+    ]);
+}</code></pre>
+  <aside class="notes">This is the backend code for creating a job. First, validate all fields using the validate() method. Then insert using PDO prepared statements with named placeholders. The posted_by field comes from the JWT payload, not from the request body — so the system always knows who created the job. Returns 201 Created with the new job data.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 20: SOFT DELETE -->
+<!-- ================================================================ -->
+<section>
+  <h2>Soft Delete — Jobs Aren't Really Deleted</h2>
+  <pre><code class="php">public function delete(Request $request, Response $response, array $args): Response
+{
+    $id = (int) ($args['id'] ?? 0);
+
+    // Check job exists
+    $stmt = $pdo->prepare('SELECT job_id FROM jobs WHERE job_id = :id');
+    $stmt->execute([':id' => $id]);
+    if (!$stmt->fetch()) {
+        return Json::write($response, 404, [
+            'success' => false,
+            'message' => 'Job not found.',
+        ]);
+    }
+
+    // Soft delete: set is_active = 0 (NOT a real DELETE)
+    $stmt = $pdo->prepare(
+        'UPDATE jobs SET is_active = 0 WHERE job_id = :id'
+    );
+    $stmt->execute([':id' => $id]);
+
+    return Json::write($response, 200, [
+        'success' => true,
+        'message' => 'Job deactivated.',
+    ]);
+}</code></pre>
+  <div class="highlight-box" style="margin-top:12px;">
+    <span class="label">Why soft delete?</span> The job record stays in the database for audit.
+    Students just don't see it anymore (index query filters <code>WHERE is_active = 1</code>).
+  </div>
+  <aside class="notes">I use soft delete for jobs instead of hard delete. The job record stays in the database with is_active set to 0. This preserves data integrity — existing applications still reference the job. The Browse Jobs page only shows jobs WHERE is_active = 1, so deactivated jobs are hidden from students but the data is preserved for audit.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 21: MANAGE APPLICATIONS -->
+<!-- ================================================================ -->
+<section>
+  <h2><span class="badge badge-m3">M3</span> Manage Applications (Admin)</h2>
+  <img class="screenshot" src="slides/17-manage-applications.png" alt="Manage applications">
+  <p style="font-size:0.5em;">Admins see ALL applications. Dropdown changes status via PUT /api/applications/{id}/status. Uses <strong>optimistic update</strong> — UI updates instantly, rolls back on error.</p>
+  <aside class="notes">On the admin side, this Manage Applications page shows ALL applications in the system. The admin can change the status using the dropdown — pending, reviewed, accepted, rejected. The frontend uses optimistic update: it updates the UI immediately, then sends the API request. If the request fails, the UI rolls back to the previous status and shows an error toast.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 22: UPDATE STATUS CODE -->
+<!-- ================================================================ -->
+<section>
+  <h2>Backend Code — Update Status (PUT)</h2>
+  <pre><code class="php">public function updateStatus(Request $request, Response $response, array $args): Response
+{
+    $id     = (int) ($args['id'] ?? 0);
+    $body   = $this->readJson($request);
+    $status = trim((string) ($body['status'] ?? ''));
+
+    // Validate status value
+    if (!in_array($status, ['pending', 'reviewed',
+            'accepted', 'rejected'], true)) {
+        return Json::write($response, 400, [
+            'success' => false,
+            'message' => 'Validation failed.',
+            'errors'  => ['status' =>
+              'Status must be pending, reviewed, accepted or rejected.'],
+        ]);
+    }
+
+    // Check application exists
+    $stmt = $pdo->prepare(
+        'SELECT application_id FROM applications
+         WHERE application_id = :id LIMIT 1'
+    );
+    $stmt->execute([':id' => $id]);
+    if (!$stmt->fetch()) {
+        return Json::write($response, 404, [
+            'success' => false,
+            'message' => 'Application not found.',
+        ]);
+    }
+
+    // Update status
+    $stmt = $pdo->prepare(
+        'UPDATE applications SET status = :s
+         WHERE application_id = :id'
+    );
+    $stmt->execute([':s' => $status, ':id' => $id]);
+
+    return Json::write($response, 200, [
+        'success' => true,
+        'message' => 'Status updated.',
+        'data'    => ['application_id' => $id, 'status' => $status],
+    ]);
+}</code></pre>
+  <aside class="notes">The update status endpoint validates that the status is one of the four allowed values, checks the application exists, then updates it. Only admins and super admins can access this endpoint — enforced by JWT middleware in the route definition.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 23: FRONTEND — BROWSE JOBS CODE -->
+<!-- ================================================================ -->
+<section>
+  <h2>Frontend Code — BrowseJobs.vue</h2>
+  <pre><code class="javascript">// Load jobs + check which ones student already applied to
+onMounted(async () => {
+  const [jobsRes, appsRes] = await Promise.all([
+    api.get('/jobs'),
+    api.get('/applications').catch(() => ({ data: { data: [] } }))
+  ])
+  jobs.value = jobsRes.data?.data ?? []
+  appliedJobIds.value = new Set(
+    (appsRes.data?.data ?? []).map(a => Number(a.job_id))
+  )
+})
+
+// Debounced search (400ms delay)
+watch(search, (val) => {
+  clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(() => {
+    debouncedQ.value = val.trim().toLowerCase()
+  }, 400)
+})
+
+// Filtered results (reactive computed)
+const filteredJobs = computed(() => {
+  return jobs.value.filter(j => {
+    if (typeFilter.value !== 'all' && j.type !== typeFilter.value)
+      return false
+    if (debouncedQ.value === '') return true
+    return `${j.title} ${j.company_name}`
+      .toLowerCase().includes(debouncedQ.value)
+  })
+})
+
+// Submit application
+async function submitApply() {
+  await api.post('/applications', {
+    job_id: modalJob.value.job_id,
+    cover_letter: coverLetter.value.trim()
+  })
+  appliedJobIds.value.add(Number(modalJob.value.job_id))
+  toast.success('Application submitted!')
+}</code></pre>
+  <aside class="notes">This is the frontend code for BrowseJobs.vue. On mount, it loads both jobs and the student's existing applications in parallel using Promise.all. The search uses a 400ms debounce to avoid filtering on every keystroke. The filtered jobs are a computed property — Vue automatically recalculates when the search text or type filter changes. The submitApply function sends the POST request and adds the job to the applied set so the Apply button gets disabled.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 24: FRONTEND — MANAGE APPLICATIONS -->
+<!-- ================================================================ -->
+<section>
+  <h2>Frontend Code — Optimistic Update</h2>
+  <pre><code class="javascript">// ManageApplications.vue — change status with optimistic update
+async function changeStatus(app, newStatus) {
+  if (newStatus === app.status) return
+  const previous = app.status
+  
+  // 1. Optimistic: update UI immediately
+  const idx = applications.value.findIndex(
+    a => a.application_id === app.application_id
+  )
+  if (idx !== -1)
+    applications.value[idx] = { ...app, status: newStatus }
+
+  try {
+    // 2. Send API request
+    await api.put(
+      `/applications/${app.application_id}/status`,
+      { status: newStatus }
+    )
+    toast.success(`Status set to ${newStatus}.`)
+  } catch (err) {
+    // 3. Rollback on error
+    if (idx !== -1)
+      applications.value[idx] = { ...app, status: previous }
+    toast.error('Could not update status.')
+  }
+}</code></pre>
+  <p style="font-size:0.5em; color:#94a3b8;">User sees the change instantly. If the API fails, UI rolls back. This makes the app feel fast.</p>
+  <aside class="notes">This is the optimistic update pattern in ManageApplications.vue. Step 1: update the UI immediately. Step 2: send the API request. Step 3: if it fails, roll back to the previous status. This makes the app feel fast and responsive — the user doesn't have to wait for the server to see the change.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 25: STUDENT PROFILE -->
+<!-- ================================================================ -->
+<section>
+  <h2>Student Profile</h2>
+  <img class="screenshot screenshot-sm" src="slides/12-student-profile.png" alt="Student profile">
+  <p style="font-size:0.5em;">Matric number, programme, CGPA (0.00–4.00), skills, resume text. Uses PUT /api/profile (upsert pattern).</p>
+  <aside class="notes">The student profile page lets students fill in their matric number, programme, CGPA, skills, and resume text. It uses an upsert pattern — INSERT ... ON DUPLICATE KEY UPDATE — so the same endpoint handles both creating and updating the profile.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 26: COMPANIES -->
+<!-- ================================================================ -->
+<section>
+  <h2>Manage Companies (Admin)</h2>
+  <div class="two-col">
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/18-manage-companies.png" alt="Manage companies">
+    </div>
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/19-create-company-modal.png" alt="Create company">
+    </div>
+  </div>
+  <p style="font-size:0.5em;">Companies are linked to jobs via foreign key. Cannot delete a company that has jobs attached (returns 400).</p>
+  <aside class="notes">Companies are linked to jobs through a foreign key. The backend prevents deleting a company that still has jobs attached — it returns a 400 error. This is referential integrity — you can't have jobs pointing to a company that doesn't exist.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 27: INTERVIEWS + FORUM -->
+<!-- ================================================================ -->
+<section>
+  <h2>Other Modules (Team)</h2>
+  <div class="two-col">
+    <div>
+      <h3>Mock Interviews (M8)</h3>
+      <img class="screenshot screenshot-sm" src="slides/20-manage-interviews.png" alt="Manage interviews">
+      <p style="font-size:0.5em;">Admin creates slots, students book them, admins evaluate with scores.</p>
+    </div>
+    <div>
+      <h3>Forum (M7)</h3>
+      <img class="screenshot screenshot-sm" src="slides/21-forum-list.png" alt="Forum list">
+      <p style="font-size:0.5em;">Posts with tags, comments, like toggle. Search and filter by tag.</p>
+    </div>
+  </div>
+  <aside class="notes">These are modules built by my teammates. Mock Interviews (M8) by Monika — admins create time slots, students book them, admins give scores and feedback. Forum (M7) also by Monika — posts with tags, comments, and a like toggle. Both use the same JWT authentication and PDO database pattern.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 28: ADMIN USERS (SUPER ADMIN) -->
+<!-- ================================================================ -->
+<section>
+  <h2>Admin Users (Super Admin Only)</h2>
+  <img class="screenshot screenshot-sm" src="slides/23-admin-users.png" alt="Admin users">
+  <p style="font-size:0.5em;">GET /api/admin/users — Only superadmin role can access. Read-only directory of all accounts.</p>
+  <aside class="notes">The Admin Users page is only accessible to super admins. It shows a read-only directory of all user accounts. The JWT middleware enforces this — the route has JwtMiddleware('superadmin'), so even regular admins get a 403 Forbidden.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 29: CRUD SUMMARY -->
+<!-- ================================================================ -->
+<section>
+  <h2>Complete CRUD Summary</h2>
+  <div class="two-col">
+    <div>
+      <h3><span class="badge badge-m2">M2</span> Jobs</h3>
+      <div class="endpoint-row"><span class="method-get">GET</span> List + search + filter</div>
+      <div class="endpoint-row"><span class="method-get">GET</span> Single job detail</div>
+      <div class="endpoint-row"><span class="method-post">POST</span> Create (admin)</div>
+      <div class="endpoint-row"><span class="method-put">PUT</span> Update (admin)</div>
+      <div class="endpoint-row"><span class="method-del">DEL</span> Soft delete (admin)</div>
+    </div>
+    <div>
+      <h3><span class="badge badge-m3">M3</span> Applications</h3>
+      <div class="endpoint-row"><span class="method-get">GET</span> Role-aware list</div>
+      <div class="endpoint-row"><span class="method-post">POST</span> Apply (student)</div>
+      <div class="endpoint-row"><span class="method-put">PUT</span> Update status (admin)</div>
+      <div class="endpoint-row"><span class="method-del">DEL</span> Withdraw (student)</div>
+    </div>
+  </div>
+  <div class="three-col" style="margin-top:20px;">
+    <div class="stat-card"><div class="num">9</div><div class="lbl">API Endpoints</div></div>
+    <div class="stat-card"><div class="num">4</div><div class="lbl">Vue Views</div></div>
+    <div class="stat-card"><div class="num">2</div><div class="lbl">DB Tables</div></div>
+  </div>
+  <aside class="notes">To summarize: my two modules provide 9 API endpoints, 4 Vue views, and 2 database tables. M2 (Jobs) has full CRUD with soft delete. M3 (Applications) has role-aware listing, apply with duplicate prevention, admin status updates, and student withdraw with ownership checks.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 30: SECURITY -->
+<!-- ================================================================ -->
+<section>
+  <h2>Security Features in My Modules</h2>
+  <div class="two-col">
+    <div>
+      <h3>Backend Security</h3>
+      <ul style="font-size:0.55em;">
+        <li><strong>PDO Prepared Statements</strong> — all queries use <code>:placeholder</code> syntax, preventing SQL injection</li>
+        <li><strong>JWT Role Gating</strong> — <code>JwtMiddleware(['admin','superadmin'])</code> on create/update/delete</li>
+        <li><strong>Ownership checks</strong> — students can only withdraw their own applications</li>
+        <li><strong>Status checks</strong> — only pending applications can be withdrawn</li>
+        <li><strong>Soft delete</strong> — jobs are deactivated, not erased (audit trail)</li>
+        <li><strong>Duplicate prevention</strong> — unique constraint on (job_id, user_id)</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Frontend Security</h3>
+      <ul style="font-size:0.55em;">
+        <li><strong>Route guards</strong> — router checks role before showing page</li>
+        <li><strong>Auto-logout on 401</strong> — Axios interceptor clears token</li>
+        <li><strong>Client-side validation</strong> — all forms validated before API call</li>
+        <li><strong>Confirm dialogs</strong> — before destructive actions (delete, withdraw)</li>
+        <li><strong>JWT in localStorage</strong> — attached to every request via interceptor</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">Security is implemented on both sides. Backend: PDO prepared statements prevent SQL injection, JWT middleware enforces role-based access, ownership checks prevent students from accessing other students' data. Frontend: route guards block unauthorized page access, Axios interceptor auto-logs out on 401, confirm dialogs prevent accidental destructive actions.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 31: VALIDATION -->
+<!-- ================================================================ -->
+<section>
+  <h2>Input Validation — Both Sides</h2>
+  <div class="two-col">
+    <div>
+      <h3>Frontend (Vue.js)</h3>
+      <pre><code class="javascript">// ManageJobs.vue validation
+function validate() {
+  if (!form.company_id)
+    errors.company_id = 'Company is required.'
+  if (!form.title.trim())
+    errors.title = 'Title is required.'
+  else if (form.title.length > 150)
+    errors.title = 'Title must be 150 chars or fewer.'
+  if (!form.description.trim())
+    errors.description = 'Description is required.'
+  if (!form.deadline)
+    errors.deadline = 'Deadline is required.'
+  else if (form.deadline < todayStr.value)
+    errors.deadline = 'Deadline must be in the future.'
+  return Object.values(errors)
+    .every(v => v === '')
+}</code></pre>
+    </div>
+    <div>
+      <h3>Backend (PHP)</h3>
+      <pre><code class="php">// JobController::validate()
+private function validate(array $body): array
+{
+    $errors = [];
+    if (empty($body['company_id']))
+        $errors['company_id'] = 'Required.';
+    if (empty($body['title']))
+        $errors['title'] = 'Required.';
+    elseif (strlen($body['title']) > 150)
+        $errors['title'] = 'Max 150 chars.';
+    if (!in_array($body['type'] ?? '',
+        ['internship','fulltime','parttime'], true))
+        $errors['type'] = 'Invalid type.';
+    if (empty($body['description']))
+        $errors['description'] = 'Required.';
+    if (empty($body['deadline']))
+        $errors['deadline'] = 'Required.';
+    return $errors;
+}</code></pre>
+    </div>
+  </div>
+  <aside class="notes">Validation happens on both sides. The frontend validates for instant user feedback — no need to wait for the server. The backend validates for security — because someone could bypass frontend validation by sending requests directly to the API. Both check required fields, max lengths, valid enum values, and future deadline dates.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 32: HTTP STATUS CODES -->
+<!-- ================================================================ -->
+<section>
+  <h2>HTTP Status Codes I Use</h2>
+  <div class="three-col">
+    <div class="stat-card" style="border:1px solid var(--green);">
+      <div class="num" style="color:#10b981;">200</div><div class="lbl">OK — GET, PUT, DELETE success</div>
+    </div>
+    <div class="stat-card" style="border:1px solid var(--green);">
+      <div class="num" style="color:#10b981;">201</div><div class="lbl">Created — POST success</div>
+    </div>
+    <div class="stat-card" style="border:1px solid var(--accent);">
+      <div class="num" style="color:#f59e0b;">400</div><div class="lbl">Bad Request — validation failed</div>
+    </div>
+  </div>
+  <div class="three-col" style="margin-top:12px;">
+    <div class="stat-card" style="border:1px solid var(--red);">
+      <div class="num" style="color:#ef4444;">401</div><div class="lbl">Unauthorized — bad/missing JWT</div>
+    </div>
+    <div class="stat-card" style="border:1px solid var(--red);">
+      <div class="num" style="color:#ef4444;">403</div><div class="lbl">Forbidden — wrong role or not owner</div>
+    </div>
+    <div class="stat-card" style="border:1px solid #64748b;">
+      <div class="num" style="color:#94a3b8;">404</div><div class="lbl">Not Found — job/application missing</div>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top:12px;">
+    <div class="stat-card" style="display:inline-block; border:1px solid var(--accent);">
+      <div class="num" style="color:#f59e0b;">409</div><div class="lbl">Conflict — already applied / duplicate</div>
+    </div>
+  </div>
+  <aside class="notes">I use proper HTTP status codes throughout. 200 for successful reads/updates, 201 for creation, 400 for validation errors, 401 for missing/invalid JWT, 403 for wrong role or not-owner, 404 for not found, and 409 for conflicts like duplicate applications. These standard codes tell the frontend exactly what happened.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 34: THANK YOU -->
+<!-- ================================================================ -->
+<section class="title-slide">
+  <h1>Thank You</h1>
+  <p class="subtitle">Module 2: Job Management &amp; Module 3: Application Tracking</p>
+  <p class="author">Samin Sarwat (A22EC4040)</p>
+  <p style="font-size:0.5em; color:#64748b; margin-top:30px;">
+    Full CRUD · JWT Authentication · PDO Prepared Statements · Vue.js + PHP Slim 4
+  </p>
+  <p style="font-size:0.5em; color:#64748b;">
+    Any questions?
+  </p>
+  <aside class="notes">That covers my two modules. M2 provides full CRUD for job listings with soft delete and search/filter. M3 provides application tracking with duplicate prevention, role-aware listing, ownership-protected withdraw, and admin status management. All secured with JWT authentication and PDO prepared statements. Any questions?</aside>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    controls: true,
+    progress: true,
+    width: 1440,
+    height: 900,
+    margin: 0.04,
+    plugins: [RevealHighlight, RevealNotes]
+  });
+</script>
+</body>
+</html>

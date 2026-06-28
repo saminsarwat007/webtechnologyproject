@@ -37,10 +37,10 @@ INSERT INTO companies (company_id, name, industry, location, description, create
   (2, 'Axiata Digital',   'Telecommunications',    'Kuala Lumpur', 'Digital arm of Axiata Group focusing on fintech, advertising, and digital platforms across emerging Asian markets.', 2),
   (3, 'Petronas ICT',     'Oil & Gas Technology',  'Kuala Lumpur', 'Information and communications technology subsidiary of Petronas, building digital solutions for the energy industry.', 1);
 
--- ------------------------------------------------------------------
--- JOBS (10 records — mix of internship / fulltime / parttime)
+-- ==================================================================
+-- SAMIN — M2: JOBS (10 records — mix of internship / fulltime / parttime)
 -- Deadlines are dynamic (90+ days from now) so they remain "future" on any seed run.
--- ------------------------------------------------------------------
+-- ==================================================================
 INSERT INTO jobs (company_id, posted_by, title, type, description, requirements, deadline, is_active) VALUES
   (1, 2, 'Software Engineering Intern',    'internship', 'Join our core engineering team to ship features for our SaaS product. You will pair with senior engineers, write production code, and participate in sprint planning.',                                              'Final-year CS/SE student. PHP or Node.js. Git. Familiar with REST APIs.',                  DATE_ADD(CURDATE(), INTERVAL 90 DAY),  TRUE),
   (2, 2, 'Frontend Developer',             'fulltime',   'Build polished, performant Vue.js interfaces for Axiata Digital products serving millions of users across the region.',                                                                                                  'Bachelor in CS/IT. 1+ year Vue.js or React. Strong CSS / Tailwind. Good communication.',     DATE_ADD(CURDATE(), INTERVAL 100 DAY), TRUE),
@@ -64,9 +64,9 @@ INSERT INTO student_profiles (user_id, matric_no, programme, cgpa, skills, resum
    'JavaScript, Vue 3, Tailwind CSS, Node.js, Figma, Git',
    'Frontend-focused SE student at UTM. Comfortable with component-driven design and modern build tooling. Internship-ready and seeking exposure to product engineering teams.');
 
--- ------------------------------------------------------------------
--- APPLICATIONS (5 records — mix of statuses)
--- ------------------------------------------------------------------
+-- ==================================================================
+-- SAMIN — M3: APPLICATIONS (5 records — mix of statuses)
+-- ==================================================================
 INSERT INTO applications (job_id, user_id, cover_letter, status) VALUES
   (1, 3, 'I am very interested in the Software Engineering Intern position. My final-year project gave me strong exposure to PHP and REST API design, and I would love to contribute to TechCorp.', 'pending'),
   (3, 3, 'Backend systems are my strongest area. I have built REST services with Slim and Laravel and am eager to work on production-grade infrastructure at Petronas ICT.',                          'reviewed'),
