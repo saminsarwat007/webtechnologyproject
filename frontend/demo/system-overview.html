@@ -725,19 +725,143 @@
 </section>
 
 <!-- ================================================================ -->
-<!-- SLIDE 31: THANK YOU -->
+<!-- SLIDE 31: HOW TO ACCESS — TWO WAYS -->
+<!-- ================================================================ -->
+<section>
+  <h2>How to Access the System — Two Ways</h2>
+  <div class="two-col">
+    <div style="background:#0f172a; border:2px solid var(--green); border-radius:10px; padding:16px;">
+      <h3 style="color: var(--green);">Way 1: Run Locally (Full Demo)</h3>
+      <p style="font-size:0.5em; color:#94a3b8;">All features work — frontend + backend + MySQL database.</p>
+      <ol style="font-size:0.5em; line-height:1.8;">
+        <li>Clone the GitHub repo</li>
+        <li>Import database: <code>mysql -u root &lt; database/schema.sql</code> then <code>mysql -u root &lt; database/seed.sql</code></li>
+        <li>Start backend: <code>php -S localhost:8000 -t backend/public</code></li>
+        <li>Start frontend: <code>cd frontend &amp;&amp; npm install &amp;&amp; npm run dev</code></li>
+        <li>Open <code>http://localhost:5173</code></li>
+      </ol>
+      <p style="font-size:0.45em; color: var(--green); margin-top:8px;">✅ Login works · ✅ All CRUD works · ✅ Database live</p>
+    </div>
+    <div style="background:#0f172a; border:2px solid var(--brand); border-radius:10px; padding:16px;">
+      <h3 style="color: var(--brand-light);">Way 2: Online (Netlify)</h3>
+      <p style="font-size:0.5em; color:#94a3b8;">Frontend deployed on Netlify. View the UI and login page.</p>
+      <p style="font-size:0.55em; margin-top:8px;">
+        <strong>Link:</strong><br>
+        <code style="font-size:1em;">https://careerbridge-champion.netlify.app</code>
+      </p>
+      <p style="font-size:0.5em; color:#94a3b8; margin-top:8px;">
+        The frontend is live. The PHP backend + MySQL need a PHP host (e.g., 000webhost). 
+        The login page and all UI views are accessible.
+      </p>
+      <p style="font-size:0.45em; color: var(--accent); margin-top:8px;">⚠️ API calls need a PHP backend host to work fully</p>
+    </div>
+  </div>
+  <div class="highlight-box" style="margin-top:16px;">
+    <span class="label">Demo Accounts</span> (password for all: <code>Password123!</code>) —
+    Student: <code>samin@student.utm.my</code> ·
+    Admin: <code>farizal@careerbridge.my</code> ·
+    Super Admin: <code>superadmin@careerbridge.my</code>
+  </div>
+  <aside class="notes">There are two ways to access the system. Way 1 is running locally — clone the repo, import the database, start the PHP backend and Vue frontend, then open localhost:5173. This gives the full working demo with all features. Way 2 is the online deployment on Netlify — the frontend is live at the URL shown, but the PHP backend and MySQL database need a separate PHP host. The login page and all UI views are accessible online, but API calls require a backend host. For the full demo with working login and CRUD, use the local method. All accounts use the same password: Password123!</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 32: LOCALHOST DEMO SCREENSHOTS -->
+<!-- ================================================================ -->
+<section>
+  <h2>Localhost Demo — Working System</h2>
+  <div class="two-col">
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/local-01-login.png" alt="Login page">
+      <p style="font-size:0.45em; text-align:center;">Login Page (localhost:5173)</p>
+    </div>
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/local-02-student-dashboard.png" alt="Student dashboard">
+      <p style="font-size:0.45em; text-align:center;">Student Dashboard — stats + recent applications</p>
+    </div>
+  </div>
+  <aside class="notes">These are screenshots of the system running locally. On the left is the login page. On the right is the student dashboard after logging in — it shows application statistics and a table of recent applications. Everything works because the PHP backend and MySQL database are running on localhost.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 33: LOCALHOST — BROWSE JOBS & APPLICATIONS -->
+<!-- ================================================================ -->
+<section>
+  <h2>Localhost Demo — Jobs &amp; Applications</h2>
+  <div class="two-col">
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/local-03-browse-jobs.png" alt="Browse jobs">
+      <p style="font-size:0.45em; text-align:center;">Browse Jobs — search, filter, apply</p>
+    </div>
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/local-04-my-applications.png" alt="My applications">
+      <p style="font-size:0.45em; text-align:center;">My Applications — track status, withdraw</p>
+    </div>
+  </div>
+  <aside class="notes">On the left, the Browse Jobs page shows all active job listings with search and filter. On the right, the My Applications page shows the student's applications with status badges and tabs to filter by status. Both are fully functional on localhost.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 34: LOCALHOST — ADMIN VIEWS -->
+<!-- ================================================================ -->
+<section>
+  <h2>Localhost Demo — Admin Views</h2>
+  <div class="three-col">
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/local-05-admin-dashboard.png" alt="Admin dashboard">
+      <p style="font-size:0.4em; text-align:center;">Admin Dashboard — stats + chart</p>
+    </div>
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/local-06-manage-jobs.png" alt="Manage jobs">
+      <p style="font-size:0.4em; text-align:center;">Manage Jobs — full CRUD</p>
+    </div>
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/local-07-manage-applications.png" alt="Manage applications">
+      <p style="font-size:0.4em; text-align:center;">Manage Applications — change status</p>
+    </div>
+  </div>
+  <aside class="notes">These are the admin views on localhost. The admin dashboard shows statistics and a Chart.js bar chart. Manage Jobs shows the full CRUD interface with edit and deactivate buttons. Manage Applications shows all applications with a dropdown to change status. All three are fully functional.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 35: NETLIFY DEPLOYMENT SCREENSHOTS -->
+<!-- ================================================================ -->
+<section>
+  <h2>Online Deployment — Netlify</h2>
+  <div class="two-col">
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/netlify-01-login.png" alt="Netlify login page">
+      <p style="font-size:0.45em; text-align:center;">Netlify — Login page loads ✅</p>
+    </div>
+    <div>
+      <img class="screenshot screenshot-sm" src="slides/netlify-03-homepage.png" alt="Netlify homepage">
+      <p style="font-size:0.45em; text-align:center;">Netlify — Homepage / SPA loads ✅</p>
+    </div>
+  </div>
+  <div class="highlight-box" style="margin-top:12px;">
+    <span class="label">Frontend status:</span> Deployed on Netlify — all Vue views, routing, and UI render correctly.<br>
+    <span class="label">Backend status:</span> PHP + MySQL need a PHP host (000webhost, InfinityFree, etc.) to enable login &amp; API calls.
+  </div>
+  <aside class="notes">These are screenshots of the online deployment on Netlify. The login page loads correctly and the Vue SPA renders perfectly. The frontend is fully deployed. However, login and API calls won't work until the PHP backend and MySQL database are hosted on a PHP hosting provider. The frontend is ready — it just needs a backend URL to connect to.</aside>
+</section>
+
+<!-- ================================================================ -->
+<!-- SLIDE 32: THANK YOU -->
 <!-- ================================================================ -->
 <section class="title-slide">
   <h1>Thank You</h1>
   <p class="subtitle">CareerBridge — Student Internship &amp; Job Application Management System</p>
   <p class="author">Team CHAMPION</p>
-  <p style="font-size:0.5em; color:#64748b; margin-top:30px;">
+  <p style="font-size:0.5em; color:#64748b; margin-top:20px;">
+    Live Demo: <code>https://careerbridge-champion.netlify.app</code>
+  </p>
+  <p style="font-size:0.5em; color:#64748b; margin-top:10px;">
     Vue 3 · PHP Slim 4 · MySQL · JWT Authentication · PDO Prepared Statements · Chart.js
   </p>
   <p style="font-size:0.5em; color:#64748b;">
     Any questions?
   </p>
-  <aside class="notes">That covers the entire CareerBridge system. We've walked through all 8 modules — from authentication to job management, application tracking, companies, analytics, student profiles, the forum, and mock interviews. The system is secured with JWT authentication and role-based access control, uses PDO prepared statements throughout to prevent SQL injection, and provides a responsive, modern user interface built with Vue 3 and Tailwind CSS. Any questions?</aside>
+  <aside class="notes">That covers the entire CareerBridge system. We've walked through all 8 modules — from authentication to job management, application tracking, companies, analytics, student profiles, the forum, and mock interviews. The live demo is available at the link shown. The system is secured with JWT authentication and role-based access control, uses PDO prepared statements throughout to prevent SQL injection, and provides a responsive, modern user interface built with Vue 3 and Tailwind CSS. Any questions?</aside>
 </section>
 
 </div>
